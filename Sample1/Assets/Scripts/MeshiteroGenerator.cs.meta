@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: ffdca2993d74d449ea23deb5a0b91fae
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - meshiteroPrefab: {fileID: 1910313998981396, guid: 3e8a719c136eb48eb9181775b5b071e2,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
