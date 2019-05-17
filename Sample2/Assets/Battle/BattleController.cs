@@ -70,7 +70,7 @@ public class BattleController : MonoBehaviour {
 			yield return new WaitForSeconds (1.0f);
 			// maxHpを超えての回復はしない
 			// 実際の回復量は計算する
-			int healedHp = Math.Min(yourMaxHp, yourHp + 3);
+			int healedHp = Math.Max(0, Math.Min(this.yourMaxHp - this.yourHp, 3));
 			this.battlelog.GetComponent<Text>().text = 
 				string.Format("あなた　は　かいふくまほう　を　となえた　！\nたいりょく　が　{0} かいふく　した！", healedHp);
 		}
