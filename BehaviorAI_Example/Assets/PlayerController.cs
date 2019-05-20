@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour {
 			RaycastHit hit;
 
 			if (Physics.Raycast(ray, out hit, Mathf.Infinity)) {
-				Debug.Log(hit.point);
+				// Debug.Log(hit.point);
 				agent.SetDestination(hit.point);
 			}
 
