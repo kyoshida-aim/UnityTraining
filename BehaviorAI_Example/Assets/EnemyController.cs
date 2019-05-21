@@ -12,34 +12,33 @@ public class EnemyController : MonoBehaviour {
 	string state = "patrol";
 	float span = 3.0f;
 	float delta = 0;
-	float lostTimeSpan = 1.5f;
+	float lostTimeSpan = 3.0f;
 	int patrolIndex = 0;
 	Vector3[] patrolPoint = new Vector3[4];
 
 	void Start () {
-		patrolPoint[0] = new Vector3(-3.0f, 0.5f, 1.0f);
-		patrolPoint[1] = new Vector3(-3.0f, 0.5f, 7.1f);
-		patrolPoint[2] = new Vector3(-9.0f, 0.5f, 7.4f);
-		patrolPoint[3] = new Vector3(-9.9f, 0.5f, 0.8f);
+		patrolPoint[0] = new Vector3(-2.7f, 0.5f, 0.6f);
+		patrolPoint[1] = new Vector3(-2.7f, 0.5f, 7.1f);
+		patrolPoint[2] = new Vector3(-10.0f, 0.5f, 7.4f);
+		patrolPoint[3] = new Vector3(-10.0f, 0.5f, 0.6f);
 	}
 
 	// Update is called once per frame
 	void Update () {
-		Debug.Log(this.state);
 		if (this.state == "patrol") {
 			this.delta += Time.deltaTime;
 			if (this.delta > this.span) {
 				this.delta = 0;
-				agent.SetDestination(patrolPoint[patrolIndex]);
-				patrolIndex = (patrolIndex + 1) % 4;
+				this.GoToNextPosition();
 			}
 		} else if (this.state == "found") {
-			agent.SetDestination(target.transform.position);
+			this.agent.SetDestination(target.transform.position);
 		} else if (this.state == "missing") {
 			this.delta += Time.deltaTime;
 			if (this.delta > this.lostTimeSpan) {
 				this.delta = 0;
 				this.state = "lost";
+				this.GoToNextPosition();
 			}
 		} else if (this.state == "lost") {
 			this.delta += Time.deltaTime;
@@ -48,6 +47,11 @@ public class EnemyController : MonoBehaviour {
 				this.state = "patrol";
 			}
 		}
+	}
+
+	void GoToNextPosition() {
+		this.agent.SetDestination(patrolPoint[patrolIndex]);
+		this.patrolIndex = (this.patrolIndex + 1) % 4;
 	}
 
 	void OnTriggerStay(Collider col) {
