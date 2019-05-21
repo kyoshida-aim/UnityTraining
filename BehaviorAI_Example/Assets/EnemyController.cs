@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour {
 	string state = "patrol";
 	float span = 3.0f;
 	float delta = 0;
-	float lostTimeSpan = 0.5f;
+	float lostTimeSpan = 1.5f;
 	int patrolIndex = 0;
 	Vector3[] patrolPoint = new Vector3[4];
 
@@ -33,6 +33,8 @@ public class EnemyController : MonoBehaviour {
 				agent.SetDestination(patrolPoint[patrolIndex]);
 				patrolIndex = (patrolIndex + 1) % 4;
 			}
+		} else if (this.state == "found") {
+			agent.SetDestination(target.transform.position);
 		} else if (this.state == "missing") {
 			this.delta += Time.deltaTime;
 			if (this.delta > this.lostTimeSpan) {
@@ -51,8 +53,10 @@ public class EnemyController : MonoBehaviour {
 	void OnTriggerStay(Collider col) {
 		//　プレイヤーキャラクターを発見
 		if(col.tag == "Player" ) {
+			RaycastHit hit;
 			if (Physics.Linecast(transform.position,
-				col.gameObject.transform.position)) {
+				col.gameObject.transform.position, out hit) && 
+				hit.transform.gameObject == this.target) {
 				this.delta = 0;
 				this.state = "found";
 				// Debug.Log("Found");
