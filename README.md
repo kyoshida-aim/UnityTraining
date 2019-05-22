@@ -11,3 +11,7 @@ Unityの保存用
 [Sample2](Sample2) :2Dの作業用
   - BallBounce :2Dでの物理エンジンの挙動確認
   - RuleBaseAI :ルールベースでの敵AIを作成する練習 
+
+[BehaviorAI_Sample](BehaviorAI_Sample) :ステートベースとビヘイビアベースの複合AI作成の練習
+  - 上記プロジェクトは[Unity公式チュートリアル](https://github.com/Brackeys/NavMesh-Tutorial)より
+    一部アセットをお借りしています。

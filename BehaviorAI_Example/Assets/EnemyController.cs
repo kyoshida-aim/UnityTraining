@@ -82,9 +82,9 @@ public class EnemyController : MonoBehaviour {
 		//　プレイヤーキャラクターを発見
 		if(col.tag == "Player" ) {
 			RaycastHit hit;
-			if (Physics.Linecast(transform.position,
-				col.gameObject.transform.position, out hit) && 
-				hit.transform.gameObject == this.target) {
+			if (Physics.Linecast(transform.position, 
+			col.gameObject.transform.position, out hit) && 
+			hit.transform.gameObject == this.target) {
 				this.ChangeState("chase");
 			} else if (this.state == "chase") {
 				this.delta += Time.deltaTime;
