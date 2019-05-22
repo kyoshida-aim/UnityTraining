@@ -15,3 +15,5 @@ Unityの保存用
 [BehaviorAI_Sample](BehaviorAI_Sample) :ステートベースとビヘイビアベースの複合AI作成の練習
   - 上記プロジェクトは[Unity公式チュートリアル](https://github.com/Brackeys/NavMesh-Tutorial)より
     一部アセットをお借りしています。
+
+[SoundTest](SoundTest) :AudioSource等を弄る練習
