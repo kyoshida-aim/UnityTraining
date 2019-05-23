@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParameterSet : MonoBehaviour {
+public class CharacterParameterSettings : MonoBehaviour {
 
 	public int MaxHp;
 }
