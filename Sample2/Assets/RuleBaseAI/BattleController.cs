@@ -71,7 +71,7 @@ public class BattleController : MonoBehaviour {
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
 			// maxHpを超えての回復はしない
 			// 実際の回復量は計算する
-			healedHp = Math.Max(0, Math.Min(this.yourMaxHp - this.yourHp, 3));
+			healedHp = Mathf.Clamp(this.yourMaxHp - this.yourHp, 0, 3);
 			this.battlelog.GetComponent<Text>().text =
 				this.battlelog.GetComponent<Text>().text.Replace("∇", "");
 			this.battlelog.GetComponent<Text>().text += string.Format("\nたいりょく　が　{0} かいふく　した！", healedHp);
@@ -107,7 +107,7 @@ public class BattleController : MonoBehaviour {
 			yield return new WaitForSeconds (1.0f);
 			// maxHpを超えての回復はしない
 			// 実際の回復量は計算する
-			healedHp = Math.Max(0, Math.Min(this.enemyMaxHp - this.enemyHp, 3));
+			healedHp = Mathf.Clamp(this.enemyMaxHp - this.enemyHp, 0, 3);
 			this.battlelog.GetComponent<Text>().text =
 				this.battlelog.GetComponent<Text>().text.Replace("∇", "");
 			this.battlelog.GetComponent<Text>().text += string.Format("\nたいりょく　が　{0} かいふく　した！", healedHp);
