@@ -20,7 +20,6 @@ public class BattleController : MonoBehaviour {
 		// this.enemyHp = this.enemyMaxHp;
 		this.enemyMaxHp = EnemySettings.GetComponent<CharacterParameterSettings>().hp;
 		this.enemyHp = EnemySettings.GetComponent<CharacterParameterSettings>().hp;
-		Debug.Log(this.enemyHp);
 		this.yourHp = this.yourMaxHp;
 		this.enemyObject = GameObject.Find("Enemy");
 		this.battlelog = GameObject.Find("BattleLog");
