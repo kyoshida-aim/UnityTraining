@@ -35,23 +35,25 @@ public class CharacterParameterEditor : Editor {
         dfc = serializedObject.FindProperty("dfc");
     }
 
+    // ラベル設定
+    public static readonly GUIContent spriteLabel = EditorGUIUtility.TrTextContent("Sprite", "The Sprite to render", (Texture) null);
+
     public override void OnInspectorGUI() {
         serializedObject.Update ();
-        CharacterParameterSettings settings = (CharacterParameterSettings) target;
-        settings.actorName = EditorGUILayout.TextField("キャラクター名", settings.actorName);
-        settings.useSprite = EditorGUILayout.Toggle("スプライトを使用", settings.useSprite);
-        if (settings.useSprite) {
-            settings.characterSprite = EditorGUILayout.ObjectField(
-                "スプライト",
-                settings.characterSprite,
-                typeof(Sprite),
-                false) as Sprite;
+
+        setting = (CharacterParameterSettings) target;
+
+        EditorGUILayout.PropertyField(this.actorName);
+        EditorGUILayout.PropertyField(this.useSprite);
+        if (setting.useSprite) {
+            EditorGUILayout.PropertyField(this.characterSprite, spriteLabel);
         }
-        settings.hp = EditorGUILayout.IntSlider("体力", settings.hp, MinHp, MaxHp);
-        settings.atk = EditorGUILayout.IntSlider("攻撃力", settings.atk, MinParam, MaxParam);
-        settings.dfc = EditorGUILayout.IntSlider("防御力", settings.dfc, MinParam, MaxParam);
-        int totalparam = settings.hp + settings.atk + settings.dfc;
+        EditorGUILayout.IntSlider(this.hp, MinHp, MaxHp);
+        EditorGUILayout.IntSlider(this.atk, MinParam, MaxParam);
+        EditorGUILayout.IntSlider(this.dfc, MinParam, MaxParam);
+        int totalparam = setting.hp + setting.atk.intValue + setting.dfc.intValue;
         EditorGUILayout.LabelField("総合戦闘力", totalparam.ToString());
+
         serializedObject.ApplyModifiedProperties ();
     }
 }

@@ -6,23 +6,27 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour {
-	int enemyMaxHp;
 	int enemyHp;
-	int yourMaxHp = 10;
 	int yourHp;
 	string enemyAction = "Wait";
 	string playerAction = "Wait";
 	GameObject enemyObject;
 	GameObject battlelog;
-	public GameObject EnemySettings;
+	BattleText battleText;
+	public CharacterParameterSettings enemy;
+	public CharacterParameterSettings you;
+	string waitText = "∇";
+	string log;
 
 	void Start () {
 		// this.enemyHp = this.enemyMaxHp;
-		this.enemyMaxHp = EnemySettings.GetComponent<CharacterParameterSettings>().hp;
-		this.enemyHp = EnemySettings.GetComponent<CharacterParameterSettings>().hp;
-		this.yourHp = this.yourMaxHp;
+		this.enemyHp = this.enemy.hp;
+		this.yourHp = this.you.hp;
 		this.enemyObject = GameObject.Find("Enemy");
+		this.enemyObject.GetComponent<SpriteRenderer>().sprite = this.enemy.CharacterSprite;
 		this.battlelog = GameObject.Find("BattleLog");
+		this.battleText = GetComponent<BattleText>();
+		this.SetBattleLog(String.Format(this.battleText.BattleStart(), this.enemy.actorName));
 	}
 
 	public void Reset() {
@@ -52,30 +56,46 @@ public class BattleController : MonoBehaviour {
 		}
 	}
 
+	void SetBattleLog(string message, bool wait = false){
+		if (wait) {
+			message += this.waitText;
+		}
+		this.battlelog.GetComponent<Text>().text = message;
+		this.log = message;
+	}
+
+	void RemoveWaitText() {
+		this.SetBattleLog(this.log.Replace(this.waitText, ""));
+	}
+
+	// ダメージ計算方法の統一のため関数化
+	int CalculateDamage(int attack, int defence) {
+		return Math.Max(attack - defence, 0);
+	}
+
+	int CalculateHealing(int maxhp, int hp) {
+		return Mathf.Clamp(maxhp - hp, 0, 3);
+	}
+
 	private IEnumerator ExecuteAction() {
-		int healedHp;
 		// メッセージを時間差で変更するいい方法が思いつかなかったので楽な方法で処理する
 
 		// プレイヤー側の行動実行
 		if (this.playerAction == "Attack") {
-			this.battlelog.GetComponent<Text>().text = 
-				"あなた　の　こうげき！　∇";
+			this.SetBattleLog(String.Format("{0}　の　こうげき！", this.you.actorName), true);
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
-			// 攻撃力設定も特にしない
-			this.enemyHp -= 3;
-			this.battlelog.GetComponent<Text>().text =
-				this.battlelog.GetComponent<Text>().text.Replace("∇", "");
-			this.battlelog.GetComponent<Text>().text += "\n3　ダメージ　あたえた！";
+			this.RemoveWaitText();
+			int damage = this.CalculateDamage(this.you.atk, this.enemy.dfc);
+			this.SetBattleLog(this.log + String.Format("\n{0}　ダメージ　あたえた！", damage));
+			this.enemyHp -= damage;
 		} else if (this.playerAction == "Heal") {
-			this.battlelog.GetComponent<Text>().text = 
-				"あなた　は　かいふくまほう　を　となえた！ ∇";
+			this.SetBattleLog(String.Format("{0} は かいふくまほう を となえた！ ∇", this.enemy.actorName));
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
 			// maxHpを超えての回復はしない
 			// 実際の回復量は計算する
-			healedHp = Mathf.Clamp(this.yourMaxHp - this.yourHp, 0, 3);
-			this.battlelog.GetComponent<Text>().text =
-				this.battlelog.GetComponent<Text>().text.Replace("∇", "");
-			this.battlelog.GetComponent<Text>().text += string.Format("\nたいりょく　が　{0} かいふく　した！", healedHp);
+			int healedHp = this.CalculateHealing(this.you.hp, this.yourHp);
+			this.RemoveWaitText();
+			this.SetBattleLog(this.log + string.Format("\nたいりょく　が　{0} かいふく　した！", healedHp));
 		}
 
 		// 敵側の行動処理に入る前にウェイトを入れる
@@ -84,34 +104,31 @@ public class BattleController : MonoBehaviour {
 		// 敵側の行動実行(死亡確認も同時に行う)
 		if (this.enemyHp <= 0) {
 			Destroy(this.enemyObject);
-			this.battlelog.GetComponent<Text>().text = 
-				"てき　が　たおれた！　∇";
+			this.SetBattleLog("てき　が　たおれた！", true);
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
-			this.battlelog.GetComponent<Text>().text = "あなた　の　かち！";
+			this.SetBattleLog("あなた　の　かち！");
 		} else if (this.enemyAction == "Attack") {
-			this.battlelog.GetComponent<Text>().text = 	"てき　の　こうげき！　∇";
+			this.SetBattleLog(String.Format("{0}　の　こうげき！　∇", this.you.actorName));
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
-			// 攻撃力設定も特にしない
-			this.yourHp -= 3;
-			this.battlelog.GetComponent<Text>().text =
-				this.battlelog.GetComponent<Text>().text.Replace("∇", "");
-			this.battlelog.GetComponent<Text>().text += "\n3　ダメージ　うけた！";
+			this.RemoveWaitText();
+			int damage = this.CalculateDamage(this.enemy.atk, this.you.dfc);
+			this.SetBattleLog(this.log + String.Format("\n{0}　ダメージ　あたえた！", damage));
+			this.yourHp -= damage;
 			if (this.yourHp <= 0) {
 				yield return new WaitForSeconds (1.0f); // 1秒待つ
-				this.battlelog.GetComponent<Text>().text = 	"あなた　の　たいりょく　が　なくなった∇";
+				this.SetBattleLog("あなた　の　たいりょく　が　なくなった", true);
 				yield return new WaitForSeconds (1.0f);
-				this.battlelog.GetComponent<Text>().text = 	"ゲームオーバー";
+				this.SetBattleLog("ゲームオーバー");
 			}
 		} else if (this.enemyAction == "Heal") {
-			this.battlelog.GetComponent<Text>().text = 	"てき　は　かいふく　した！　∇";
+			this.SetBattleLog(	"てき　は　かいふく　した！", true);
 			// 1秒待つ
 			yield return new WaitForSeconds (1.0f);
 			// maxHpを超えての回復はしない
 			// 実際の回復量は計算する
-			healedHp = Mathf.Clamp(this.enemyMaxHp - this.enemyHp, 0, 3);
-			this.battlelog.GetComponent<Text>().text =
-				this.battlelog.GetComponent<Text>().text.Replace("∇", "");
-			this.battlelog.GetComponent<Text>().text += string.Format("\nたいりょく　が　{0} かいふく　した！", healedHp);
+			int healedHp = this.CalculateHealing(this.enemy.hp, this.enemyHp);
+			this.RemoveWaitText();
+			this.SetBattleLog(this.log + string.Format("\nたいりょく　が　{0} かいふく　した！", healedHp));
 		}
 	}
 }
