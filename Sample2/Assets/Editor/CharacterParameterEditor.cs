@@ -51,7 +51,7 @@ public class CharacterParameterEditor : Editor {
         EditorGUILayout.IntSlider(this.hp, MinHp, MaxHp);
         EditorGUILayout.IntSlider(this.atk, MinParam, MaxParam);
         EditorGUILayout.IntSlider(this.dfc, MinParam, MaxParam);
-        int totalparam = setting.hp + setting.atk.intValue + setting.dfc.intValue;
+        int totalparam = setting.hp + setting.atk + setting.dfc;
         EditorGUILayout.LabelField("総合戦闘力", totalparam.ToString());
 
         serializedObject.ApplyModifiedProperties ();
