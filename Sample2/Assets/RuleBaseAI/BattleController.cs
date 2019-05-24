@@ -6,8 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour {
-	// Use this for initialization
-	int enemyMaxHp = 10;
+	int enemyMaxHp;
 	int enemyHp;
 	int yourMaxHp = 10;
 	int yourHp;
@@ -15,13 +14,16 @@ public class BattleController : MonoBehaviour {
 	string playerAction = "Wait";
 	GameObject enemyObject;
 	GameObject battlelog;
+	public GameObject EnemySettings;
 
 	void Start () {
-		this.enemyHp = this.enemyMaxHp;
+		// this.enemyHp = this.enemyMaxHp;
+		this.enemyMaxHp = EnemySettings.GetComponent<CharacterParameterSettings>().hp;
+		this.enemyHp = EnemySettings.GetComponent<CharacterParameterSettings>().hp;
+		Debug.Log(this.enemyHp);
 		this.yourHp = this.yourMaxHp;
 		this.enemyObject = GameObject.Find("Enemy");
 		this.battlelog = GameObject.Find("BattleLog");
-		Debug.Log(this.battlelog.GetComponent<Text>().text.GetType());
 	}
 
 	public void Reset() {
@@ -81,7 +83,7 @@ public class BattleController : MonoBehaviour {
 		yield return new WaitForSeconds (1.0f);
 
 		// 敵側の行動実行(死亡確認も同時に行う)
-		if (this.enemyHp < 0) {
+		if (this.enemyHp <= 0) {
 			Destroy(this.enemyObject);
 			this.battlelog.GetComponent<Text>().text = 
 				"てき　が　たおれた！　∇";
