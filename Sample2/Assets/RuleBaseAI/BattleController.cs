@@ -17,6 +17,7 @@ public class BattleController : MonoBehaviour {
 	public CharacterParameterSettings you;
 	string waitText = "∇";
 	string log;
+	bool addNextText = false;
 
 	void Start () {
 		// this.enemyHp = this.enemyMaxHp;
@@ -26,7 +27,7 @@ public class BattleController : MonoBehaviour {
 		this.enemyObject.GetComponent<SpriteRenderer>().sprite = this.enemy.CharacterSprite;
 		this.battlelog = GameObject.Find("BattleLog");
 		this.battleText = GetComponent<BattleText>();
-		this.SetBattleLog(String.Format(this.battleText.BattleStart(), this.enemy.actorName));
+		this.SetBattleLog(String.Format(this.battleText.BattleStart, this.enemy.actorName));
 	}
 
 	public void Reset() {
@@ -57,15 +58,16 @@ public class BattleController : MonoBehaviour {
 	}
 
 	void SetBattleLog(string message, bool wait = false){
+		if (this.addNextText) {
+			message = this.log.Replace(this.waitText, "") + "\n" +  message;
+			this.addNextText = false;
+		}
 		if (wait) {
+			this.addNextText = true;
 			message += this.waitText;
 		}
 		this.battlelog.GetComponent<Text>().text = message;
 		this.log = message;
-	}
-
-	void RemoveWaitText() {
-		this.SetBattleLog(this.log.Replace(this.waitText, ""));
 	}
 
 	// ダメージ計算方法の統一のため関数化
@@ -82,20 +84,18 @@ public class BattleController : MonoBehaviour {
 
 		// プレイヤー側の行動実行
 		if (this.playerAction == "Attack") {
-			this.SetBattleLog(String.Format("{0}　の　こうげき！", this.you.actorName), true);
+			this.SetBattleLog(String.Format(this.battleText.OnAttack, this.you.actorName), true);
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
-			this.RemoveWaitText();
 			int damage = this.CalculateDamage(this.you.atk, this.enemy.dfc);
-			this.SetBattleLog(this.log + String.Format("\n{0}　ダメージ　あたえた！", damage));
+			this.SetBattleLog(String.Format(this.battleText.DealDamage, damage));
 			this.enemyHp -= damage;
 		} else if (this.playerAction == "Heal") {
-			this.SetBattleLog(String.Format("{0} は かいふくまほう を となえた！ ∇", this.enemy.actorName));
+			this.SetBattleLog(String.Format(this.battleText.EnchantHeal, this.you.actorName), true);
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
 			// maxHpを超えての回復はしない
 			// 実際の回復量は計算する
 			int healedHp = this.CalculateHealing(this.you.hp, this.yourHp);
-			this.RemoveWaitText();
-			this.SetBattleLog(this.log + string.Format("\nたいりょく　が　{0} かいふく　した！", healedHp));
+			this.SetBattleLog(string.Format("たいりょく　が　{0} かいふく　した！", healedHp));
 		}
 
 		// 敵側の行動処理に入る前にウェイトを入れる
@@ -108,27 +108,25 @@ public class BattleController : MonoBehaviour {
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
 			this.SetBattleLog("あなた　の　かち！");
 		} else if (this.enemyAction == "Attack") {
-			this.SetBattleLog(String.Format("{0}　の　こうげき！　∇", this.you.actorName));
+			this.SetBattleLog(String.Format(this.battleText.OnAttack, this.enemy.actorName), true);
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
-			this.RemoveWaitText();
 			int damage = this.CalculateDamage(this.enemy.atk, this.you.dfc);
-			this.SetBattleLog(this.log + String.Format("\n{0}　ダメージ　あたえた！", damage));
+			this.SetBattleLog(String.Format(this.battleText.TakeDamage, damage));
 			this.yourHp -= damage;
 			if (this.yourHp <= 0) {
 				yield return new WaitForSeconds (1.0f); // 1秒待つ
-				this.SetBattleLog("あなた　の　たいりょく　が　なくなった", true);
+				this.SetBattleLog("あなた　の　たいりょく　が　なくなった");
 				yield return new WaitForSeconds (1.0f);
 				this.SetBattleLog("ゲームオーバー");
 			}
 		} else if (this.enemyAction == "Heal") {
-			this.SetBattleLog(	"てき　は　かいふく　した！", true);
+			this.SetBattleLog(String.Format(this.battleText.EnchantHeal, this.enemy.actorName), true);
 			// 1秒待つ
 			yield return new WaitForSeconds (1.0f);
 			// maxHpを超えての回復はしない
 			// 実際の回復量は計算する
 			int healedHp = this.CalculateHealing(this.enemy.hp, this.enemyHp);
-			this.RemoveWaitText();
-			this.SetBattleLog(this.log + string.Format("\nたいりょく　が　{0} かいふく　した！", healedHp));
+			this.SetBattleLog(string.Format("たいりょく　が　{0} かいふく　した！", healedHp));
 		}
 	}
 }
