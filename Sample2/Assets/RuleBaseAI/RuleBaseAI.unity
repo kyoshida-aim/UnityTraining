@@ -425,6 +425,7 @@ GameObject:
   - component: {fileID: 390941590}
   - component: {fileID: 390941589}
   - component: {fileID: 390941591}
+  - component: {fileID: 390941592}
   m_Layer: 0
   m_Name: BattleController
   m_TagString: Untagged
@@ -486,12 +487,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bf9eb888c0e4463eaa4bcd16172a9be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actorName: "\u30A2\u30B7\u30E5\u30E9\u4E0A\u53F8"
+  actorName: "\u5996\u602A"
   useSprite: 1
-  characterSprite: {fileID: 21300000, guid: 528051cadd47f43b29e28cacc240f890, type: 3}
-  hp: 50
-  atk: 50
-  dfc: 50
+  characterSprite: {fileID: 21300000, guid: 54b0ef283327a4ecb8bab37e3329f714, type: 3}
+  hp: 10
+  atk: 6
+  dfc: 3
 --- !u!114 &390941591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,6 +516,33 @@ MonoBehaviour:
   youWin: "<PlayerName> \u306E \u304B\u3061\uFF01"
   onPlayerDefeat: "<PlayerName> \u306E \u305F\u3044\u308A\u3087\u304F\u3000\u304C\u3000\u306A\u304F\u306A\u3063\u305F"
   youLose: "\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC"
+--- !u!114 &390941592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 390941586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57a37fa0885b14174b2e328980f0768c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  routine:
+  - turnTrigger: 1
+    enemyHP: 1
+    playerHP: 1
+    actionOnce: 1
+    actionID: 0
+  - turnTrigger: 0
+    enemyHP: 1
+    playerHP: 1
+    actionOnce: 0
+    actionID: 0
+  - turnTrigger: 0
+    enemyHP: 1
+    playerHP: 1
+    actionOnce: 0
+    actionID: 1
 --- !u!1 &482500623
 GameObject:
   m_ObjectHideFlags: 0
