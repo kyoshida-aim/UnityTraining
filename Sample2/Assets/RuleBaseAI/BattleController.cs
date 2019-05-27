@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class BattleController : MonoBehaviour {
 	int enemyHp;
 	int yourHp;
+	int points;
 	string enemyAction = "Wait";
 	string playerAction = "Wait";
 	GameObject enemyObject;
@@ -27,7 +28,7 @@ public class BattleController : MonoBehaviour {
 		this.enemyObject.GetComponent<SpriteRenderer>().sprite = this.enemy.CharacterSprite;
 		this.battlelog = GameObject.Find("BattleLog");
 		this.battleText = GetComponent<BattleText>();
-		this.SetBattleLog(String.Format(this.battleText.BattleStart, this.enemy.actorName));
+		this.SetBattleLog(this.battleText.BattleStart);
 	}
 
 	public void Reset() {
@@ -66,8 +67,15 @@ public class BattleController : MonoBehaviour {
 			this.addNextText = true;
 			message += this.waitText;
 		}
-		this.battlelog.GetComponent<Text>().text = message;
+		this.battlelog.GetComponent<Text>().text = MessageTranslate(message);
 		this.log = message;
+	}
+
+	private string MessageTranslate(string message) {
+        message = message.Replace("<PlayerName>", you.actorName);
+        message = message.Replace("<EnemyName>", enemy.actorName);
+        message = message.Replace("<Points>", this.points.ToString());
+        return message;
 	}
 
 	// ダメージ計算方法の統一のため関数化
@@ -84,18 +92,18 @@ public class BattleController : MonoBehaviour {
 
 		// プレイヤー側の行動実行
 		if (this.playerAction == "Attack") {
-			this.SetBattleLog(String.Format(this.battleText.OnAttack, this.you.actorName), true);
+			this.SetBattleLog(this.battleText.OnPlayerAttack, true);
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
-			int damage = this.CalculateDamage(this.you.atk, this.enemy.dfc);
-			this.SetBattleLog(String.Format(this.battleText.DealDamage, damage));
-			this.enemyHp -= damage;
+			this.points = this.CalculateDamage(this.you.atk, this.enemy.dfc);
+			this.SetBattleLog(this.battleText.DealDamage);
+			this.enemyHp -= this.points;
 		} else if (this.playerAction == "Heal") {
-			this.SetBattleLog(String.Format(this.battleText.EnchantHeal, this.you.actorName), true);
+			this.SetBattleLog(this.battleText.OnPlayerHeal, true);
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
 			// maxHpを超えての回復はしない
 			// 実際の回復量は計算する
-			int healedHp = this.CalculateHealing(this.you.hp, this.yourHp);
-			this.SetBattleLog(string.Format("たいりょく　が　{0} かいふく　した！", healedHp));
+			this.points = this.CalculateHealing(this.you.hp, this.yourHp);
+			this.SetBattleLog(this.battleText.Healed);
 		}
 
 		// 敵側の行動処理に入る前にウェイトを入れる
@@ -104,29 +112,30 @@ public class BattleController : MonoBehaviour {
 		// 敵側の行動実行(死亡確認も同時に行う)
 		if (this.enemyHp <= 0) {
 			Destroy(this.enemyObject);
-			this.SetBattleLog("てき　が　たおれた！", true);
+			this.SetBattleLog(this.battleText.OnEnemyDefeat, true);
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
-			this.SetBattleLog("あなた　の　かち！");
+			this.SetBattleLog(this.battleText.YouWin);
 		} else if (this.enemyAction == "Attack") {
-			this.SetBattleLog(String.Format(this.battleText.OnAttack, this.enemy.actorName), true);
+			this.SetBattleLog(this.battleText.OnEnemyAttack, true);
 			yield return new WaitForSeconds (1.0f); // 1秒待つ
-			int damage = this.CalculateDamage(this.enemy.atk, this.you.dfc);
-			this.SetBattleLog(String.Format(this.battleText.TakeDamage, damage));
-			this.yourHp -= damage;
+			this.points = this.CalculateDamage(this.enemy.atk, this.you.dfc);
+			this.SetBattleLog(this.battleText.TakeDamage);
+			this.yourHp -= this.points;
 			if (this.yourHp <= 0) {
 				yield return new WaitForSeconds (1.0f); // 1秒待つ
-				this.SetBattleLog("あなた　の　たいりょく　が　なくなった");
+				this.SetBattleLog(this.battleText.OnPlayerDefeat);
 				yield return new WaitForSeconds (1.0f);
-				this.SetBattleLog("ゲームオーバー");
+				this.SetBattleLog(this.battleText.YouLose);
 			}
 		} else if (this.enemyAction == "Heal") {
-			this.SetBattleLog(String.Format(this.battleText.EnchantHeal, this.enemy.actorName), true);
+			this.SetBattleLog(this.battleText.OnEnemyHeal, true);
 			// 1秒待つ
 			yield return new WaitForSeconds (1.0f);
 			// maxHpを超えての回復はしない
 			// 実際の回復量は計算する
-			int healedHp = this.CalculateHealing(this.enemy.hp, this.enemyHp);
-			this.SetBattleLog(string.Format("たいりょく　が　{0} かいふく　した！", healedHp));
+			this.points = this.CalculateHealing(this.enemy.hp, this.enemyHp);
+			this.SetBattleLog(this.battleText.Healed);
 		}
 	}
+
 }

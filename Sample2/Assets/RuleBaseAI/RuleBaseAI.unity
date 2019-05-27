@@ -373,6 +373,46 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &318424457
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 318424459}
+  - component: {fileID: 318424458}
+  m_Layer: 0
+  m_Name: Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &318424458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 318424457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be0c5b2c5b1446e9a630f35dd2a05bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &318424459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 318424457}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &390941586
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,12 +486,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bf9eb888c0e4463eaa4bcd16172a9be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actorName: "\u5996\u602A"
+  actorName: "\u30A2\u30B7\u30E5\u30E9\u4E0A\u53F8"
   useSprite: 1
-  characterSprite: {fileID: 21300000, guid: 54b0ef283327a4ecb8bab37e3329f714, type: 3}
-  hp: 10
-  atk: 6
-  dfc: 3
+  characterSprite: {fileID: 21300000, guid: 528051cadd47f43b29e28cacc240f890, type: 3}
+  hp: 50
+  atk: 50
+  dfc: 50
 --- !u!114 &390941591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,12 +503,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32dc789a2fcf7476ea41d2284f7c511f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleStart: "{0} \u304C \u3042\u3089\u308F\u308C\u305F\uFF01"
-  onAttack: "{0} \u306E \u3053\u3046\u3052\u304D\uFF01"
-  dealDamage: "{0} \u306E \u30C0\u30E1\u30FC\u30B8\u3000\u3092\u3000\u3042\u305F\u3048\u305F\uFF01"
-  takeDamage: "{0} \u306E \u30C0\u30E1\u30FC\u30B8\u3000\u3092\u3000\u3046\u3051\u305F\uFF01"
-  enchantHeal: "{0} \u306F \u304B\u3044\u3075\u304F\u307E\u307B\u3046 \u3092 \u3068\u306A\u3048\u305F\uFF01"
-  healed: "\u305F\u3044\u308A\u3087\u304F\u3000\u304C\u3000{0} \u304B\u3044\u3075\u304F\u3000\u3057\u305F\uFF01"
+  battleStart: "<EnemyName> \u304C \u3042\u3089\u308F\u308C\u305F\uFF01"
+  onPlayerAttack: "<PlayerName> \u306E \u3053\u3046\u3052\u304D\uFF01"
+  onEnemyAttack: "<EnemyName> \u306E \u3053\u3046\u3052\u304D\uFF01"
+  dealDamage: "<Points> \u306E \u30C0\u30E1\u30FC\u30B8\u3000\u3092\u3000\u3042\u305F\u3048\u305F\uFF01"
+  takeDamage: "<Points> \u306E \u30C0\u30E1\u30FC\u30B8\u3000\u3092\u3000\u3046\u3051\u305F\uFF01"
+  onPlayerHeal: "<PlayerName> \u306F \u304B\u3044\u3075\u304F \u3057\u305F\uFF01"
+  onEnemyHeal: "<EnemyName> \u306F \u304B\u3044\u3075\u304F \u3057\u305F\uFF01"
+  healed: "\u305F\u3044\u308A\u3087\u304F\u3000\u304C\u3000<Points> \u304B\u3044\u3075\u304F\u3000\u3057\u305F\uFF01"
+  onEnemyDefeat: "<EnemyName> \u304C \u305F\u304A\u308C\u305F\uFF01"
+  youWin: "<PlayerName> \u306E \u304B\u3061\uFF01"
+  onPlayerDefeat: "<PlayerName> \u306E \u305F\u3044\u308A\u3087\u304F\u3000\u304C\u3000\u306A\u304F\u306A\u3063\u305F"
+  youLose: "\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC"
 --- !u!1 &482500623
 GameObject:
   m_ObjectHideFlags: 0
@@ -991,81 +1037,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1698232088
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1698232090}
-  - component: {fileID: 1698232089}
-  m_Layer: 0
-  m_Name: Test
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!212 &1698232089
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1698232088}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!4 &1698232090
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1698232088}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1709800356
 GameObject:
   m_ObjectHideFlags: 0

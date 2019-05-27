@@ -4,17 +4,31 @@ using UnityEngine;
 
 public class BattleText : MonoBehaviour {
 
-	[SerializeField, Multiline] private string battleStart = "{0} が あらわれた！";
-	[SerializeField, Multiline] private string onAttack = "{0} の こうげき！";
-	[SerializeField, Multiline] private string dealDamage = "{0} の ダメージ　を　あたえた！";
-	[SerializeField, Multiline] private string takeDamage = "{0} の ダメージ　を　うけた！";
-	[SerializeField, Multiline] private string enchantHeal = "{0} は かいふく した！";
-	[SerializeField, Multiline] private string healed = "たいりょく　が　{0} かいふく　した！";
+	// [SerializeField, Multiline] private string battleStart = "{0} が あらわれた！";
+	[SerializeField, BattleTextWithPreview] private string battleStart = "<EnemyName> が あらわれた！";
+	[SerializeField, BattleTextWithPreview] private string onPlayerAttack = "<PlayerName> の こうげき！";
+	[SerializeField, BattleTextWithPreview] private string onEnemyAttack = "<EnemyName> の こうげき！";
+	[SerializeField, BattleTextWithPreview] private string dealDamage = "<Points> の ダメージ　を　あたえた！";
+	[SerializeField, BattleTextWithPreview] private string takeDamage = "<Points> の ダメージ　を　うけた！";
+	[SerializeField, BattleTextWithPreview] private string onPlayerHeal = "<PlayerName> は かいふく した！";
+	[SerializeField, BattleTextWithPreview] private string onEnemyHeal = "<EnemyName> は かいふく した！";
+	[SerializeField, BattleTextWithPreview] private string healed = "たいりょく　が　<Points> かいふく　した！";
+	[SerializeField, BattleTextWithPreview] private string onEnemyDefeat = "<EnemyName> が たおれた！";
+	[SerializeField, BattleTextWithPreview] private string youWin = "<PlayerName> の かち！";
+	[SerializeField, BattleTextWithPreview] private string onPlayerDefeat = "<PlayerName> の たいりょく　が　なくなった";
+	[SerializeField, BattleTextWithPreview] private string youLose = "ゲームオーバー";
 
 	public string BattleStart { get { return battleStart; } }
-	public string OnAttack { get { return onAttack; } }
+	public string OnPlayerAttack { get { return onPlayerAttack; } }
+	public string OnEnemyAttack { get { return onEnemyAttack; } }
 	public string DealDamage { get { return dealDamage; } }
 	public string TakeDamage { get { return takeDamage; } }
-	public string EnchantHeal { get { return enchantHeal; } }
+	public string OnPlayerHeal { get { return onPlayerHeal; } }
+	public string OnEnemyHeal { get { return onEnemyHeal; } }
 	public string Healed { get { return healed; } }
+	public string OnEnemyDefeat {get { return onEnemyDefeat; } }
+	public string YouWin { get { return youWin; } }
+	public string OnPlayerDefeat { get { return onPlayerDefeat; } }
+	public string YouLose { get { return youLose; } }
+	
 }
