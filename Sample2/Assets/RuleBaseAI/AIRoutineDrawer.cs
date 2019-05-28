@@ -12,103 +12,154 @@ public class AIRoutineDrawer : PropertyDrawer {
 	string[] ActionList = {"ATTACK", "HEAL" };
 	string[] Multiple = {"の時", "の倍数の時" };
 	string[] HigherorLower = {"以上", "以下" };
-	private AIRoutine routine;
+	string percentageText = "%";
+	// private AIRoutine routine;
 
 	public override void OnGUI (Rect position,
 		SerializedProperty property, GUIContent label)
 	{
 		using (new EditorGUI.PropertyScope (position, label, property)) {
-		//各プロパティーの SerializedProperty を求める
-		var turn = property.FindPropertyRelative ("turn");
-		var turnFormula = property.FindPropertyRelative ("turnFormula");
-		var enemyHP = property.FindPropertyRelative ("enemyHP");
-		var enemyHPFormula = property.FindPropertyRelative ("enemyHPFormula");
-		var playerHP = property.FindPropertyRelative ("playerHP");
-		var playerHPFormula = property.FindPropertyRelative ("playerHPFormula");
-		var actionOnce = property.FindPropertyRelative ("actionOnce");
-		var actionID = property.FindPropertyRelative("actionID");
+			// 各プロパティーの描画範囲を決定
+			// "%"を描画するのに必要な領域の計算
+			float percentageTextWidth = 0f;
+			float _maxWidth = 0f;
+			new GUIStyle().CalcMinMaxWidth(new GUIContent(percentageText),
+			out percentageTextWidth, out _maxWidth );
+			percentageTextWidth *= 2;
 
-		// 各プロパティーの描画範囲を決定
-		var turnTriggerRect = new Rect (position){
-			height = EditorGUIUtility.singleLineHeight + 2
-		};
-		var turnFormulaRect1 = new Rect (turnTriggerRect){
-			width = position.width / 3 * 2,
-			y = turnTriggerRect.y + EditorGUIUtility.singleLineHeight + 2
-		};
-		var turnFormulaRect2 = new Rect (turnFormulaRect1){
-			x = position.x + turnFormulaRect1.width,
-			width = position.width - turnFormulaRect1.width
-		};
-		var enemyHPRect = new Rect(turnTriggerRect) {
-			y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 2
-		};
-		var enemyHPFormulaRect1 = new Rect(turnTriggerRect) {
-			width = position.width / 3 * 2,
-			y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 3
-		};
-		var enemyHPFormulaRect2 = new Rect(enemyHPFormulaRect1) {
-			x = position.x + enemyHPFormulaRect1.width,
-			width = position.width - enemyHPFormulaRect1.width
-		};
-		var playerHPRect = new Rect(turnTriggerRect) {
-			y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 4
-		};
-		var playerHPFormulaRect1 = new Rect(turnTriggerRect) {
-			width = position.width / 3 * 2,
-			y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 5
-		};
-		var playerHPFormulaRect2 = new Rect(playerHPFormulaRect1) {
-			x = position.x + playerHPFormulaRect1.width,
-			width = position.width - playerHPFormulaRect1.width
-		};
-		var actionOnceRect = new Rect(turnTriggerRect) {
-			y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 6
-		};
-		var actionRect = new Rect(turnTriggerRect) {
-			y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 7
-		};
+			// 条件:ターン数
+			var turnTriggerRect = new Rect (position){
+				height = EditorGUIUtility.singleLineHeight + 2
+			};
+			var turnValueRect = new Rect (turnTriggerRect){
+				width = position.width / 3 * 2,
+				y = turnTriggerRect.y + EditorGUIUtility.singleLineHeight + 2
+			};
+			var ConstOrMultiRect = new Rect (turnValueRect){
+				x = position.x + turnValueRect.width,
+				width = position.width - turnValueRect.width
+			};
 
-		//各プロパティーの GUI を描画
+			// 条件:敵のHP
+			var enemyHPRect = new Rect(turnTriggerRect) {
+				y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 2
+			};
+			var enemyHP_CVRect = new Rect(turnTriggerRect) {
+				y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 3
+			};
+			var enemyHP_CRRect = new Rect(enemyHP_CVRect){
+				width = position.width / 5,
+			};
+			enemyHP_CRRect.x = position.x +
+									position.width -
+									enemyHP_CRRect.width;
+			enemyHP_CVRect.width = position.width -
+										enemyHP_CRRect.width -
+										percentageTextWidth ;
 
-		EditorGUI.PropertyField(turnTriggerRect, turn);
-		if (turn.boolValue) {
-			EditorGUI.IntField(turnFormulaRect1,
-				"ターン数が",
-				turnFormula.GetArrayElementAtIndex(0).intValue);
-			turnFormula.GetArrayElementAtIndex(1).intValue = 
-				EditorGUI.Popup(turnFormulaRect2,
-				turnFormula.GetArrayElementAtIndex(1).intValue,
-				Multiple);
-		}
+			// 条件:プレイヤーのHP
+			var playerHPRect = new Rect(turnTriggerRect) {
+				y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 4
+			};
+			var playerHP_CVRect = new Rect(turnTriggerRect) {
+				y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 5
+			};
+			var playerHP_CRRect = new Rect(playerHP_CVRect) {
+				width = position.width / 5,
+			};
+			playerHP_CRRect.x = position.x +
+									position.width -
+									playerHP_CRRect.width;
+			playerHP_CVRect.width = position.width -
+										playerHP_CRRect.width -
+										percentageTextWidth ;
 
-		EditorGUI.PropertyField(enemyHPRect, enemyHP);
-		if (enemyHP.boolValue) {
-			EditorGUI.IntField(enemyHPFormulaRect1,
-				"敵のHPが",
-				enemyHPFormula.GetArrayElementAtIndex(0).intValue);
-			enemyHPFormula.GetArrayElementAtIndex(1).intValue = 
-				EditorGUI.Popup(enemyHPFormulaRect2,
-				// "%",
-				enemyHPFormula.GetArrayElementAtIndex(1).intValue,
-				HigherorLower);
-		}
+			// 処理を満たしている場合毎回処理を行うか、一回のみ行うか
+			var actionOnceRect = new Rect(turnTriggerRect) {
+				y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 6
+			};
 
-		EditorGUI.PropertyField(playerHPRect, playerHP);
-		if (playerHP.boolValue) {
-			EditorGUI.IntField(playerHPFormulaRect1,
-				"味方のHPが",
-				playerHPFormula.GetArrayElementAtIndex(0).intValue);
-			playerHPFormula.GetArrayElementAtIndex(1).intValue = 
-				EditorGUI.Popup(playerHPFormulaRect2,
-				// "%",
-				playerHPFormula.GetArrayElementAtIndex(1).intValue,
-				HigherorLower);
-		}
+			// 行動内容
+			var actionRect = new Rect(turnTriggerRect) {
+				y = turnTriggerRect.y + (EditorGUIUtility.singleLineHeight + 2) * 7
+			};
 
+			//各プロパティーの SerializedProperty を求める
+			var useTurnValue = property.FindPropertyRelative ("useTurnValue");
+			var turnValue = property.FindPropertyRelative ("turnValue");
+			var ConstOrMulti = property.FindPropertyRelative ("ConstOrMulti");
+			var enemyHPTrigger = property.FindPropertyRelative ("enemyHPTrigger");
+			var enemyHP_ConditionValue = property.FindPropertyRelative ("enemyHP_ConditionValue");
+			var enemyHP_ConditionRange = property.FindPropertyRelative ("enemyHP_ConditionRange");
+			var playerHPTrigger = property.FindPropertyRelative ("playerHPTrigger");
+			var playerHP_ConditionValue = property.FindPropertyRelative ("playerHP_ConditionValue");
+			var playerHP_ConditionRange = property.FindPropertyRelative ("playerHP_ConditionRange");
+			var actionOnce = property.FindPropertyRelative ("actionOnce");
+			var actionID = property.FindPropertyRelative("actionID");
 
-		EditorGUI.PropertyField(actionOnceRect, actionOnce);
-		actionID.intValue = EditorGUI.Popup(actionRect, "Action", actionID.intValue, ActionList);
+			//各プロパティーの GUI を描画
+
+			// 条件:ターン数
+			EditorGUI.PropertyField(turnTriggerRect, useTurnValue);
+			if (useTurnValue.boolValue) {
+				turnValue.intValue = Mathf.Max(
+				EditorGUI.IntField(turnValueRect,
+					"ターン数が",
+					turnValue.intValue), 0);
+
+				ConstOrMulti.intValue = 
+					EditorGUI.Popup(ConstOrMultiRect,
+					ConstOrMulti.intValue,
+					Multiple);
+
+			}
+
+			// 条件:敵のHP
+			EditorGUI.PropertyField(enemyHPRect, enemyHPTrigger);
+			if (enemyHPTrigger.boolValue) {
+				enemyHP_ConditionValue.intValue = Mathf.Clamp(
+				EditorGUI.IntField(enemyHP_CVRect,
+					"敵のHPが",
+					enemyHP_ConditionValue.intValue), 0, 100);
+
+				EditorGUI.LabelField(new Rect(enemyHP_CVRect){
+					x = enemyHP_CVRect.x + enemyHP_CVRect.width,
+					width = percentageTextWidth,},
+					percentageText);
+				
+				enemyHP_ConditionRange.intValue = 
+					EditorGUI.Popup(enemyHP_CRRect,
+					enemyHP_ConditionRange.intValue,
+					HigherorLower);
+
+			}
+			
+			// 条件:プレイヤーのHP
+			EditorGUI.PropertyField(playerHPRect, playerHPTrigger);
+			if (playerHPTrigger.boolValue) {
+
+				playerHP_ConditionValue.intValue = Mathf.Clamp(
+					EditorGUI.IntField(playerHP_CVRect,
+					"味方のHPが",
+					playerHP_ConditionValue.intValue), 0, 100);
+
+				EditorGUI.LabelField(new Rect(playerHP_CVRect){
+					x = playerHP_CVRect.x + playerHP_CVRect.width,
+					width = percentageTextWidth,},
+					percentageText);
+				
+				playerHP_ConditionRange.intValue = 
+					EditorGUI.Popup(playerHP_CRRect,
+					playerHP_ConditionRange.intValue,
+					HigherorLower);
+
+			}
+
+			// 処理を満たしている場合毎回処理を行うか、一回のみ行うか
+			EditorGUI.PropertyField(actionOnceRect, actionOnce);
+
+			// 行動内容
+			actionID.intValue = EditorGUI.Popup(actionRect, "Action", actionID.intValue, ActionList);
 		}
 	}
 }

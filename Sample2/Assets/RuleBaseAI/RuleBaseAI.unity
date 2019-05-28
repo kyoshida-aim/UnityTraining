@@ -528,22 +528,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   routine:
-  - turn: 1
-    turnFormula: 0000000000000000
-    enemyHP: 1
-    enemyHPFormula: 0000000000000000
-    playerHP: 1
-    playerHPFormula: 0000000000000000
-    actionOnce: 1
+  - turn: 0
+    turnFormula: 
+    enemyHP: 0
+    enemyHPFormula: 
+    playerHP: 0
+    playerHPFormula: 
+    actionOnce: 0
     actionID: 0
   - turn: 0
-    turnFormula: 0000000000000000
+    turnFormula: 
     enemyHP: 0
-    enemyHPFormula: 0000000000000000
+    enemyHPFormula: 
     playerHP: 0
-    playerHPFormula: 0000000000000000
+    playerHPFormula: 
     actionOnce: 0
-    actionID: 1
+    actionID: 0
+  - turn: 0
+    turnFormula: 
+    enemyHP: 0
+    enemyHPFormula: 
+    playerHP: 0
+    playerHPFormula: 
+    actionOnce: 0
+    actionID: 0
 --- !u!1 &482500623
 GameObject:
   m_ObjectHideFlags: 0

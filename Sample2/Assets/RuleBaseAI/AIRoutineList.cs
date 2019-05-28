@@ -4,16 +4,31 @@ using System;
 [Serializable]
 public class AIRoutine {
     // 条件式
-    [SerializeField] private bool turn;
-    [SerializeField] private int[] turnFormula = new int[2];
-    [SerializeField] private bool enemyHP;
-    [SerializeField] private int[] enemyHPFormula = new int[2];
-    [SerializeField] private bool playerHP;
-    [SerializeField] private int[] playerHPFormula = new int[2];
-    [SerializeField] private bool actionOnce;
-    [SerializeField] private int actionID;
+    [SerializeField] public bool useTurnValue;
+    [SerializeField] public int turnValue;
+    [SerializeField] public int ConstOrMulti;
+    [SerializeField] public bool enemyHPTrigger;
+    [SerializeField] public int enemyHP_ConditionValue;
+    [SerializeField] public int enemyHP_ConditionRange;
+    [SerializeField] public bool playerHPTrigger;
+    [SerializeField] public int playerHP_ConditionValue;
+    [SerializeField] public int playerHP_ConditionRange;
+    [SerializeField] public bool actionOnce;
+    [SerializeField] public int actionID;
+
 }
 
 public class AIRoutineList : MonoBehaviour {
     public AIRoutine[] routine;
+
+    public AIRoutine[] list() {
+        return routine;
+    }
+    public AIRoutine list(int index) {
+        return routine[index];
+    }
+    public int size() {
+        return routine.Length;
+    }
+
 }
