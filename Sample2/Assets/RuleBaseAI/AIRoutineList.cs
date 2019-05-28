@@ -20,7 +20,9 @@ public class AIRoutine {
 
 public class AIRoutineList : MonoBehaviour {
     public AIRoutine[] routine;
-
+    public int selected = 0;
+    public bool needRefresh = false;
+    
     public AIRoutine[] list() {
         return routine;
     }

@@ -6,6 +6,7 @@ public class BattleText : MonoBehaviour {
 
 	// [SerializeField, Multiline] private string battleStart = "{0} が あらわれた！";
 	[SerializeField, BattleTextWithPreview] private string battleStart = "<EnemyName> が あらわれた！";
+	[SerializeField, BattleTextWithPreview] private string enemyWaiting= "<EnemyName> は ようすを　みている...";
 	[SerializeField, BattleTextWithPreview] private string onPlayerAttack = "<PlayerName> の こうげき！";
 	[SerializeField, BattleTextWithPreview] private string onEnemyAttack = "<EnemyName> の こうげき！";
 	[SerializeField, BattleTextWithPreview] private string dealDamage = "<Points> の ダメージ　を　あたえた！";
@@ -19,6 +20,7 @@ public class BattleText : MonoBehaviour {
 	[SerializeField, BattleTextWithPreview] private string youLose = "ゲームオーバー";
 
 	public string BattleStart { get { return battleStart; } }
+	public string EnemyWaiting { get { return enemyWaiting; } }
 	public string OnPlayerAttack { get { return onPlayerAttack; } }
 	public string OnEnemyAttack { get { return onEnemyAttack; } }
 	public string DealDamage { get { return dealDamage; } }

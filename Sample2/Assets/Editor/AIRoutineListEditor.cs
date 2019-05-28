@@ -31,6 +31,11 @@ public class AIRoutineListEditor : Editor
   public override void OnInspectorGUI ()
   {
     serializedObject.Update ();
+    var list = (AIRoutineList) target;
+    if (list.needRefresh) {
+      reorderableList.index = list.selected;
+      list.needRefresh = false;
+    }
     reorderableList.DoLayoutList ();
     serializedObject.ApplyModifiedProperties ();
   }

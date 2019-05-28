@@ -136,12 +136,16 @@ public class BattleController : MonoBehaviour {
 			// ここまできたら上記全ての条件をクリアーしている
 			// actionに行動内容を登録して終了
 			action = routine;
+			routineList.selected = counter - 1;
+			routineList.needRefresh = true;
 			break;
 		}
 		if (action.actionID == 0) {
 			this.enemyAction = "Attack";
 		} else if (action.actionID == 1) {
 			this.enemyAction = "Heal";
+		} else if (action.actionID == 2) {
+			this.enemyAction = "Wait";
 		}
 	}
 
@@ -223,7 +227,9 @@ public class BattleController : MonoBehaviour {
 			this.points = this.CalculateHealing(this.enemy.hp, this.enemyCurrentHP);
 			this.SetBattleLog(this.battleText.Healed);
 			this.enemyCurrentHP += this.points;
-		}
+		} else if (this.enemyAction == "Wait") {
+			this.SetBattleLog(this.battleText.EnemyWaiting);
+		} 
 	}
 
 }
