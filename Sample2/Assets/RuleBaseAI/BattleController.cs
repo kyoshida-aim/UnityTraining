@@ -15,8 +15,8 @@ public class BattleController : MonoBehaviour {
 	GameObject enemyObject;
 	GameObject battlelog;
 	BattleText battleText;
-	public CharacterParameterSettings enemy;
-	public CharacterParameterSettings player;
+	EnemyParams enemy;
+	PlayerParams player;
 	string waitText = "∇";
 	string log;
 	bool addNextText = false;
@@ -24,7 +24,8 @@ public class BattleController : MonoBehaviour {
 	bool[] activatedActionList;
 
 	void Start () {
-		// this.enemyCurrentHP = this.enemyMaxHp;
+		this.enemy = GetComponent<EnemyParams>();
+		this.player = GetComponent<PlayerParams>();
 		this.enemyCurrentHP = this.enemy.hp;
 		this.playerCurrentHP = this.player.hp;
 		this.enemyObject = GameObject.Find("Enemy");

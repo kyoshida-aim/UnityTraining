@@ -1,0 +1,32 @@
+﻿using System.Collections;
+using UnityEngine;
+using UnityEditor;
+
+[CustomEditor(typeof(PlayerParamsEditor))]
+[CanEditMultipleObjects]
+public class PlayerParamsEditor : CharacterParameterEditor {
+	
+    PlayerParams setting = null;
+
+    void OnEnable () {
+        actorName = serializedObject.FindProperty("actorName");
+        hp = serializedObject.FindProperty("hp");
+        atk = serializedObject.FindProperty("atk");
+        dfc = serializedObject.FindProperty("dfc");
+    }
+
+    public override void OnInspectorGUI() {
+        serializedObject.Update ();
+
+        setting = (PlayerParams) target;
+
+        EditorGUILayout.PropertyField(this.actorName);
+        EditorGUILayout.IntSlider(this.hp, MinHp, MaxHp);
+        EditorGUILayout.IntSlider(this.atk, MinParam, MaxParam);
+        EditorGUILayout.IntSlider(this.dfc, MinParam, MaxParam);
+        int totalparam = setting.hp + setting.atk + setting.dfc;
+        EditorGUILayout.LabelField("総合戦闘力", totalparam.ToString());
+
+        serializedObject.ApplyModifiedProperties ();
+    }
+}
