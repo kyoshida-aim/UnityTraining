@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class BattleText : MonoBehaviour {
 
 	// [SerializeField, Multiline] private string battleStart = "{0} が あらわれた！";
@@ -14,7 +15,7 @@ public class BattleText : MonoBehaviour {
 	[SerializeField, BattleTextWithPreview] private string onPlayerHeal = "<PlayerName> は かいふく した！";
 	[SerializeField, BattleTextWithPreview] private string onEnemyHeal = "<EnemyName> は かいふく した！";
 	[SerializeField, BattleTextWithPreview] private string healed = "たいりょく　が　<Points> かいふく　した！";
-	[SerializeField, BattleTextWithPreview] private string onEnemyDefeat = "<EnemyName> が たおれた！";
+	[SerializeField, BattleTextWithPreview] private string onEnemyDefeat = "<EnemyName> は たおれた！";
 	[SerializeField, BattleTextWithPreview] private string youWin = "<PlayerName> の かち！";
 	[SerializeField, BattleTextWithPreview] private string onPlayerDefeat = "<PlayerName> の たいりょく　が　なくなった";
 	[SerializeField, BattleTextWithPreview] private string youLose = "ゲームオーバー";

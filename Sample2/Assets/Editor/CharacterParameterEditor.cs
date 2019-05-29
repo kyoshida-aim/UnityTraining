@@ -22,10 +22,6 @@ public class CharacterParameterEditor : Editor {
 	// 初期設定
 	// Atk(攻撃力)・Dfc(防御力)のRangeはParamで共有する
 	// DefではなくDfcにしてるのはDefineと略称が被るのが嫌なため
-	protected const string defaultName = "キャラクター名";
 	protected const int MaxHp = 50; protected const int MinHp = 1;
 	protected const int MaxParam = 50; protected const int MinParam = 1;
-	protected const int defaultHp = 10;
-	protected const int defaultAtk = 10;
-	protected const int defaultDfc = 10;
 }

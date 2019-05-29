@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(PlayerParamsEditor))]
+[CustomEditor(typeof(PlayerParams))]
 [CanEditMultipleObjects]
 public class PlayerParamsEditor : CharacterParameterEditor {
 	

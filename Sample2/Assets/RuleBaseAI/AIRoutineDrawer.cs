@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-// public enum ACTION {
-// 	ATTACK = 0,
-// 	HEAL = 1,
-// }
-
 [CustomPropertyDrawer (typeof(AIRoutine))]
 public class AIRoutineDrawer : PropertyDrawer {
 
@@ -13,9 +8,8 @@ public class AIRoutineDrawer : PropertyDrawer {
 	string[] Multiple = {"の時", "の倍数の時" };
 	string[] HigherorLower = {"以上", "以下" };
 	string percentageText = "%";
-	// private AIRoutine routine;
 
-public override void OnGUI (Rect position,
+	public override void OnGUI (Rect position,
 		SerializedProperty property, GUIContent label)
 	{
 		using (new EditorGUI.PropertyScope (position, label, property)) {
