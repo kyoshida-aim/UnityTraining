@@ -8,12 +8,6 @@ public class PlayerParamsEditor : CharacterParameterEditor {
 	
     PlayerParams setting = null;
 
-    void OnEnable () {
-        actorName = serializedObject.FindProperty("actorName");
-        hp = serializedObject.FindProperty("hp");
-        atk = serializedObject.FindProperty("atk");
-        dfc = serializedObject.FindProperty("dfc");
-    }
 
     public override void OnInspectorGUI() {
         serializedObject.Update ();

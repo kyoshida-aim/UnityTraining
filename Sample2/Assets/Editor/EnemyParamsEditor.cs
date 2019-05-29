@@ -6,14 +6,13 @@ using UnityEditor;
 [CanEditMultipleObjects]
 public class EnemyParamsEditor : CharacterParameterEditor {
 
+    private SerializedProperty characterSprite;
     EnemyParams setting = null;
 
-    void OnEnable () {
-        actorName = serializedObject.FindProperty("actorName");
+    public override void OnEnable () {
+        base.OnEnable();
         characterSprite = serializedObject.FindProperty("characterSprite");
-        hp = serializedObject.FindProperty("hp");
-        atk = serializedObject.FindProperty("atk");
-        dfc = serializedObject.FindProperty("dfc");
+        routineList = serializedObject.FindProperty("routineList");
     }
 
     // ラベル設定
