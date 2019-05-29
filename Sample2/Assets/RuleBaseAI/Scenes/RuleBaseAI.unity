@@ -264,7 +264,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 390941587}
+      - m_Target: {fileID: 0}
         m_MethodName: Reset
         m_Mode: 1
         m_Arguments:
@@ -421,11 +421,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 390941588}
-  - component: {fileID: 390941587}
+  - component: {fileID: 390941591}
   - component: {fileID: 390941590}
   - component: {fileID: 390941589}
-  - component: {fileID: 390941591}
-  - component: {fileID: 390941592}
+  - component: {fileID: 390941587}
   m_Layer: 0
   m_Name: BattleController
   m_TagString: Untagged
@@ -441,11 +440,61 @@ MonoBehaviour:
   m_GameObject: {fileID: 390941586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c016549ab0ce345299c860d915226468, type: 3}
+  m_Script: {fileID: 11500000, guid: ab0deb464928b49c4baaebc7b21738a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 390941590}
-  player: {fileID: 390941589}
+  actorName: "\u5996\u602A"
+  hp: 10
+  atk: 6
+  dfc: 3
+  characterSprite: {fileID: 21300000, guid: 54b0ef283327a4ecb8bab37e3329f714, type: 3}
+  routine:
+  - useTurnValue: 1
+    turnValue: 1
+    ConstOrMulti: 0
+    enemyHPTrigger: 0
+    enemyHP_ConditionValue: 0
+    enemyHP_ConditionRange: 0
+    playerHPTrigger: 0
+    playerHP_ConditionValue: 0
+    playerHP_ConditionRange: 0
+    actionOnce: 0
+    actionID: 2
+  - useTurnValue: 0
+    turnValue: 0
+    ConstOrMulti: 0
+    enemyHPTrigger: 1
+    enemyHP_ConditionValue: 70
+    enemyHP_ConditionRange: 1
+    playerHPTrigger: 0
+    playerHP_ConditionValue: 0
+    playerHP_ConditionRange: 0
+    actionOnce: 0
+    actionID: 1
+  - useTurnValue: 0
+    turnValue: 0
+    ConstOrMulti: 0
+    enemyHPTrigger: 0
+    enemyHP_ConditionValue: 0
+    enemyHP_ConditionRange: 0
+    playerHPTrigger: 0
+    playerHP_ConditionValue: 0
+    playerHP_ConditionRange: 0
+    actionOnce: 0
+    actionID: 0
+  - useTurnValue: 0
+    turnValue: 0
+    ConstOrMulti: 0
+    enemyHPTrigger: 0
+    enemyHP_ConditionValue: 0
+    enemyHP_ConditionRange: 0
+    playerHPTrigger: 0
+    playerHP_ConditionValue: 0
+    playerHP_ConditionRange: 0
+    actionOnce: 0
+    actionID: 2
+  routineIndex: 0
+  needRefresh: 0
 --- !u!4 &390941588
 Transform:
   m_ObjectHideFlags: 0
@@ -467,12 +516,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 390941586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bf9eb888c0e4463eaa4bcd16172a9be, type: 3}
+  m_Script: {fileID: 11500000, guid: b7825b3ba1f7e43ea84cf8e51b238b9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   actorName: "\u3042\u306A\u305F"
-  useSprite: 0
-  characterSprite: {fileID: 21300000, guid: 54b0ef283327a4ecb8bab37e3329f714, type: 3}
   hp: 10
   atk: 6
   dfc: 3
@@ -484,28 +531,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 390941586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bf9eb888c0e4463eaa4bcd16172a9be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actorName: "\u5996\u602A"
-  useSprite: 1
-  characterSprite: {fileID: 21300000, guid: 54b0ef283327a4ecb8bab37e3329f714, type: 3}
-  hp: 10
-  atk: 6
-  dfc: 3
---- !u!114 &390941591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 390941586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32dc789a2fcf7476ea41d2284f7c511f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   battleStart: "<EnemyName> \u304C \u3042\u3089\u308F\u308C\u305F\uFF01"
-  enemyWaiting: "<EnemyName> \u306F \u4F55\u3082\u3057\u3066\u3053\u306A\u3044"
+  enemyWaiting: "<EnemyName> \u306F \u3088\u3046\u3059\u3092\u3000\u307F\u3066\u3044\u308B..."
   onPlayerAttack: "<PlayerName> \u306E \u3053\u3046\u3052\u304D\uFF01"
   onEnemyAttack: "<EnemyName> \u306E \u3053\u3046\u3052\u304D\uFF01"
   dealDamage: "<Points> \u306E \u30C0\u30E1\u30FC\u30B8\u3000\u3092\u3000\u3042\u305F\u3048\u305F\uFF01"
@@ -517,7 +547,7 @@ MonoBehaviour:
   youWin: "<PlayerName> \u306E \u304B\u3061\uFF01"
   onPlayerDefeat: "<PlayerName> \u306E \u305F\u3044\u308A\u3087\u304F\u3000\u304C\u3000\u306A\u304F\u306A\u3063\u305F"
   youLose: "\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC"
---- !u!114 &390941592
+--- !u!114 &390941591
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -525,56 +555,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 390941586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57a37fa0885b14174b2e328980f0768c, type: 3}
+  m_Script: {fileID: 11500000, guid: c016549ab0ce345299c860d915226468, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  routine:
-  - useTurnValue: 1
-    turnValue: 1
-    ConstOrMulti: 0
-    enemyHPTrigger: 0
-    enemyHP_ConditionValue: 100
-    enemyHP_ConditionRange: 0
-    playerHPTrigger: 0
-    playerHP_ConditionValue: 0
-    playerHP_ConditionRange: 0
-    actionOnce: 0
-    actionID: 2
-  - useTurnValue: 0
-    turnValue: 0
-    ConstOrMulti: 0
-    enemyHPTrigger: 1
-    enemyHP_ConditionValue: 70
-    enemyHP_ConditionRange: 1
-    playerHPTrigger: 0
-    playerHP_ConditionValue: 0
-    playerHP_ConditionRange: 0
-    actionOnce: 1
-    actionID: 1
-  - useTurnValue: 0
-    turnValue: 0
-    ConstOrMulti: 0
-    enemyHPTrigger: 0
-    enemyHP_ConditionValue: 70
-    enemyHP_ConditionRange: 1
-    playerHPTrigger: 0
-    playerHP_ConditionValue: 0
-    playerHP_ConditionRange: 0
-    actionOnce: 0
-    actionID: 0
-  - useTurnValue: 0
-    turnValue: 0
-    ConstOrMulti: 0
-    enemyHPTrigger: 1
-    enemyHP_ConditionValue: 40
-    enemyHP_ConditionRange: 1
-    playerHPTrigger: 0
-    playerHP_ConditionValue: 0
-    playerHP_ConditionRange: 0
-    actionOnce: 0
-    actionID: 1
-  selected: 0
-  needRefresh: 0
 --- !u!1 &482500623
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,7 +779,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 390941587}
+      - m_Target: {fileID: 390941591}
         m_MethodName: CallPlayerAction
         m_Mode: 3
         m_Arguments:
@@ -1014,7 +997,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 390941587}
+      - m_Target: {fileID: 390941591}
         m_MethodName: CallPlayerAction
         m_Mode: 3
         m_Arguments:
