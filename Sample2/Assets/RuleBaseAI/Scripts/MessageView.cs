@@ -45,10 +45,9 @@ public class MessageView : MonoBehaviour {
 
     // TODO : モデルやコントローラーを作成後参照しメッセージの変換ができるようにする
     private string Translate(string message) {
-        message = message.Replace(
-                    "<PlayerName>", PlayerName).Replace(
-                        "<EnemyName>", EnemyName).Replace(
-                            "<Points>", EffectQuantity.ToString());
+        message = message.Replace("<PlayerName>", PlayerName)
+                            .Replace("<EnemyName>", EnemyName)
+                            .Replace("<Points>", EffectQuantity.ToString());
         return message;
     }
 }
