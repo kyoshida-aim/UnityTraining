@@ -21,19 +21,19 @@ public class AIRoutine {
 }
 
 [DisallowMultipleComponent]
-public class EnemyParams :  CharacterParameterSettings {
+public class Enemy :  Actor {
 
-	[SerializeField] private Sprite characterSprite;
+    [SerializeField] private Sprite characterSprite;
     [SerializeField] private AIRoutine[] routine;
-	[HideInInspector] public int routineIndex = 0;
-	[HideInInspector] public bool needRefresh = false;
+    [HideInInspector] public int routineIndex = 0;
+    [HideInInspector] public bool needRefresh = false;
 
-	public Sprite CharacterSprite {
-		set { this.characterSprite = value; }
-		get { return this.characterSprite; }
-	}
-	public AIRoutine[] routineList {
-		get { return this.routine; }
-	}
+    public Sprite CharacterSprite {
+        set { this.characterSprite = value; }
+        get { return this.characterSprite; }
+    }
+    public AIRoutine[] routineList {
+        get { return this.routine; }
+    }
 
 }

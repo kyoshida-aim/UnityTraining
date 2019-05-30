@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(CharacterParameterSettings))]
+[CustomEditor(typeof(Actor))]
 [CanEditMultipleObjects]
-public class CharacterParameterEditor : Editor {
+public class ActorEditor : Editor {
     
     // シリアライズプロパティ
     protected SerializedProperty actorName;
