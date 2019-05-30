@@ -3,18 +3,19 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
-[CustomEditor(typeof(EnemyParams))]
+[CustomEditor(typeof(Enemy))]
 [CanEditMultipleObjects]
-public class EnemyParamsEditor : CharacterParameterEditor {
+public class EnemyEditor : ActorEditor {
 
     ReorderableList reorderableList;
     SerializedProperty characterSprite;
 
-    EnemyParams setting = null;
+    Enemy setting = null;
 
     public override void OnEnable () {
         base.OnEnable();
         characterSprite = serializedObject.FindProperty("characterSprite");
+        
         var prop = serializedObject.FindProperty ("routine");
         reorderableList = new ReorderableList (serializedObject, prop);
         reorderableList.elementHeight = EditorGUIUtility.singleLineHeight * 9;
@@ -38,14 +39,15 @@ public class EnemyParamsEditor : CharacterParameterEditor {
     public override void OnInspectorGUI() {
         serializedObject.Update ();
 
-        setting = (EnemyParams) target;
+        setting = (Enemy) target;
 
         EditorGUILayout.PropertyField(this.actorName);
         EditorGUILayout.PropertyField(this.characterSprite, spriteLabel);
         EditorGUILayout.IntSlider(this.hp, MinHp, MaxHp);
         EditorGUILayout.IntSlider(this.atk, MinParam, MaxParam);
         EditorGUILayout.IntSlider(this.dfc, MinParam, MaxParam);
-        int totalparam = setting.hp + setting.atk + setting.dfc;
+        
+        int totalparam = setting.Hp + setting.Atk + setting.Dfc;
         EditorGUILayout.LabelField("総合戦闘力", totalparam.ToString());
         
         if (setting.needRefresh) {

@@ -2,23 +2,23 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(PlayerParams))]
+[CustomEditor(typeof(Player))]
 [CanEditMultipleObjects]
-public class PlayerParamsEditor : CharacterParameterEditor {
+public class PlayerEditor : ActorEditor {
 	
-    PlayerParams setting = null;
+    Player setting = null;
 
 
     public override void OnInspectorGUI() {
         serializedObject.Update ();
 
-        setting = (PlayerParams) target;
+        setting = (Player) target;
 
         EditorGUILayout.PropertyField(this.actorName);
         EditorGUILayout.IntSlider(this.hp, MinHp, MaxHp);
         EditorGUILayout.IntSlider(this.atk, MinParam, MaxParam);
         EditorGUILayout.IntSlider(this.dfc, MinParam, MaxParam);
-        int totalparam = setting.hp + setting.atk + setting.dfc;
+        int totalparam = setting.Hp + setting.Atk + setting.Dfc;
         EditorGUILayout.LabelField("総合戦闘力", totalparam.ToString());
 
         serializedObject.ApplyModifiedProperties ();
