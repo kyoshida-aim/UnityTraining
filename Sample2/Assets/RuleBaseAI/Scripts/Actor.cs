@@ -9,6 +9,8 @@ public class Actor : MonoBehaviour {
     public int atk = 6;
     public int dfc = 3;
 
+
+    // NOTE : モデル部分の切り出しをする際に大きく仕様変更する可能性アリ
     [HideInInspector]public int CurrentHP;
 
     void Start() {
