@@ -13,7 +13,7 @@ public class ActorEditor : Editor {
     protected SerializedProperty dfc;
 
     public virtual void OnEnable () {
-        actorName = serializedObject.FindProperty("actorName");
+        actorName = serializedObject.FindProperty("ActorName");
         hp = serializedObject.FindProperty("hp");
         atk = serializedObject.FindProperty("atk");
         dfc = serializedObject.FindProperty("dfc");

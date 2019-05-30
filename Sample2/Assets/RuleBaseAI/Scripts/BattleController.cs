@@ -7,34 +7,29 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Enemy))]
 [RequireComponent(typeof(Player))]
-[RequireComponent(typeof(MessageView))]
-[RequireComponent(typeof(EnemyView))]
 [RequireComponent(typeof(BattleText))]
 public class BattleController : MonoBehaviour {
-    int effect_quantity;
-    int turncount = 0;
+    int turnCount = 0;
     string enemyAction = "Wait";
     string playerAction = "Wait";
-    MessageView messageView;
-    EnemyView enemyView;
+    [SerializeField] private ButtonView buttonView;
+    [SerializeField] private MessageView messageView;
+    [SerializeField] private EnemyView enemyView;
     BattleText battleText;
     Enemy enemy;
     Player player;
-    [SerializeField] private ButtonView buttonView;
     bool[] activatedActionList;
 
     void Start () {
         this.enemy = GetComponent<Enemy>();
-        this.enemyView = GetComponent<EnemyView>();
-        this.enemyView.setSprite(this.enemy.CharacterSprite);
+        this.enemyView.SetSprite(this.enemy.CharacterSprite);
         this.player = GetComponent<Player>();
         this.battleText = GetComponent<BattleText>();
         this.activatedActionList = new bool[this.enemy.routineList.Length];
 
-        messageView = GetComponent<MessageView>();
-        messageView.playerName = player.actorName;
-        messageView.enemyName = enemy.actorName;
-        messageView.Set(this.battleText.BattleStart);
+        messageView.PlayerName = player.ActorName;
+        messageView.EnemyName = enemy.ActorName;
+        messageView.DisplayMessage(this.battleText.BattleStart);
 
         buttonView.OnAttackClick.AddListener(CallPlayerAttack);
         buttonView.OnHealClick.AddListener(CallPlayerHeal);
@@ -59,7 +54,7 @@ public class BattleController : MonoBehaviour {
     public void processingTurnExecution () {
 
         // ターンカウントを進める
-        this.turncount++;
+        this.turnCount++;
 
         // 敵の行動を決定する
         SetEnemyAction();
@@ -81,11 +76,11 @@ public class BattleController : MonoBehaviour {
             if (routine.useTurnValue){
                 //条件を満たしていない時だけ次のループに移動する 
                 if (routine.ConstOrMulti == 0) {
-                    if (this.turncount != routine.turnValue) {
+                    if (this.turnCount != routine.turnValue) {
                         satisfy_all_criteria = false;
                     }
                 } else if (routine.ConstOrMulti == 1) {
-                    if (this.turncount % routine.turnValue != 0) {
+                    if (this.turnCount % routine.turnValue != 0) {
                         satisfy_all_criteria = false;
                     }
                 }
@@ -163,18 +158,18 @@ public class BattleController : MonoBehaviour {
 
         // プレイヤー側の行動実行
         if (this.playerAction == "Attack") {
-            messageView.Set(this.battleText.OnPlayerAttack, true);
+            messageView.DisplayMessage(this.battleText.OnPlayerAttack, true);
             yield return new WaitForSeconds (1.0f); // 1秒待つ
-            messageView.effect_quantity = this.CalculateDamage(this.player.atk, this.enemy.dfc);
-            messageView.Set(this.battleText.DealDamage);
-            this.enemy.decreaseHP(messageView.effect_quantity);
+            messageView.EffectQuantity = this.CalculateDamage(this.player.atk, this.enemy.dfc);
+            messageView.DisplayMessage(this.battleText.DealDamage);
+            this.enemy.decreaseHP(messageView.EffectQuantity);
         } else if (this.playerAction == "Heal") {
-            messageView.Set(this.battleText.OnPlayerHeal, true);
+            messageView.DisplayMessage(this.battleText.OnPlayerHeal, true);
             yield return new WaitForSeconds (1.0f); // 1秒待つ
             // maxHpを超えての回復はしない
             // 実際の回復量は計算する
-            messageView.effect_quantity = this.CalculateHealing(this.player.hp, this.player.CurrentHP);
-            messageView.Set(this.battleText.Healed);
+            messageView.EffectQuantity = this.CalculateHealing(this.player.hp, this.player.CurrentHP);
+            messageView.DisplayMessage(this.battleText.Healed);
         }
 
         // 敵側の行動処理に入る前にウェイトを入れる
@@ -184,31 +179,31 @@ public class BattleController : MonoBehaviour {
         if (this.enemy.CurrentHP <= 0) {
             enemyView.OnDefeat();
             // this.enemyView.OnDefeat();
-            messageView.Set(this.battleText.OnEnemyDefeat, true);
+            messageView.DisplayMessage(this.battleText.OnEnemyDefeat, true);
             yield return new WaitForSeconds (1.0f); // 1秒待つ
-            messageView.Set(this.battleText.YouWin);
+            messageView.DisplayMessage(this.battleText.YouWin);
         } else if (this.enemyAction == "Attack") {
-            messageView.Set(this.battleText.OnEnemyAttack, true);
+            messageView.DisplayMessage(this.battleText.OnEnemyAttack, true);
             yield return new WaitForSeconds (1.0f); // 1秒待つ
-            messageView.effect_quantity = this.CalculateDamage(this.enemy.atk, this.player.dfc);
-            messageView.Set(this.battleText.TakeDamage);
-            this.player.decreaseHP(messageView.effect_quantity);
+            messageView.EffectQuantity = this.CalculateDamage(this.enemy.atk, this.player.dfc);
+            messageView.DisplayMessage(this.battleText.TakeDamage);
+            this.player.decreaseHP(messageView.EffectQuantity);
             if (this.player.CurrentHP <= 0) {
                 yield return new WaitForSeconds (1.0f); // 1秒待つ
-                messageView.Set(this.battleText.OnPlayerDefeat);
+                messageView.DisplayMessage(this.battleText.OnPlayerDefeat);
                 yield return new WaitForSeconds (1.0f);
-                messageView.Set(this.battleText.YouLose);
+                messageView.DisplayMessage(this.battleText.YouLose);
             }
         } else if (this.enemyAction == "Heal") {
-            messageView.Set(this.battleText.OnEnemyHeal, true);
+            messageView.DisplayMessage(this.battleText.OnEnemyHeal, true);
             yield return new WaitForSeconds (1.0f); // 1秒待つ
             // maxHpを超えての回復はしない
             // 実際の回復量は計算する
-            messageView.effect_quantity = this.CalculateHealing(this.enemy.hp, this.enemy.CurrentHP);
-            messageView.Set(this.battleText.Healed);
-            this.enemy.increaseHP(messageView.effect_quantity);
+            messageView.EffectQuantity = this.CalculateHealing(this.enemy.hp, this.enemy.CurrentHP);
+            messageView.DisplayMessage(this.battleText.Healed);
+            this.enemy.increaseHP(messageView.EffectQuantity);
         } else if (this.enemyAction == "Wait") {
-            messageView.Set(this.battleText.EnemyWaiting);
+            messageView.DisplayMessage(this.battleText.EnemyWaiting);
         } 
     }
 

@@ -411,7 +411,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &390941586
 GameObject:
@@ -440,13 +440,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 390941586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab0deb464928b49c4baaebc7b21738a1, type: 3}
+  m_Script: {fileID: 11500000, guid: c016549ab0ce345299c860d915226468, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actorName: "\u5996\u602A"
+  buttonView: {fileID: 1326785173}
+  messageView: {fileID: 1789378409}
+  enemyView: {fileID: 1868381429}
+--- !u!4 &390941588
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 390941586}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.9024057, y: 2.09908, z: 0.073681206}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &390941589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 390941586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fa085ce52c264620be4ae99afdcce6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ActorName: "\u5996\u602A"
   hp: 10
-  atk: 6
+  atk: 5
   dfc: 3
+  CurrentHP: 0
   characterSprite: {fileID: 21300000, guid: 54b0ef283327a4ecb8bab37e3329f714, type: 3}
   routine:
   - useTurnValue: 1
@@ -469,46 +497,22 @@ MonoBehaviour:
     playerHPTrigger: 0
     playerHP_ConditionValue: 0
     playerHP_ConditionRange: 0
-    actionOnce: 0
+    actionOnce: 1
     actionID: 1
   - useTurnValue: 0
     turnValue: 0
     ConstOrMulti: 0
     enemyHPTrigger: 0
-    enemyHP_ConditionValue: 0
-    enemyHP_ConditionRange: 0
+    enemyHP_ConditionValue: 70
+    enemyHP_ConditionRange: 1
     playerHPTrigger: 0
     playerHP_ConditionValue: 0
     playerHP_ConditionRange: 0
     actionOnce: 0
     actionID: 0
-  - useTurnValue: 0
-    turnValue: 0
-    ConstOrMulti: 0
-    enemyHPTrigger: 0
-    enemyHP_ConditionValue: 0
-    enemyHP_ConditionRange: 0
-    playerHPTrigger: 0
-    playerHP_ConditionValue: 0
-    playerHP_ConditionRange: 0
-    actionOnce: 0
-    actionID: 2
   routineIndex: 0
   needRefresh: 0
---- !u!4 &390941588
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 390941586}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.9024057, y: 2.09908, z: 0.073681206}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &390941589
+--- !u!114 &390941590
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -516,14 +520,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 390941586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7825b3ba1f7e43ea84cf8e51b238b9b, type: 3}
+  m_Script: {fileID: 11500000, guid: bf7b548554e664a3ebe077aa9a3a4314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actorName: "\u3042\u306A\u305F"
+  ActorName: "\u3042\u306A\u305F"
   hp: 10
   atk: 6
   dfc: 3
---- !u!114 &390941590
+  CurrentHP: 0
+--- !u!114 &390941591
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -543,21 +548,10 @@ MonoBehaviour:
   onPlayerHeal: "<PlayerName> \u306F \u304B\u3044\u3075\u304F \u3057\u305F\uFF01"
   onEnemyHeal: "<EnemyName> \u306F \u304B\u3044\u3075\u304F \u3057\u305F\uFF01"
   healed: "\u305F\u3044\u308A\u3087\u304F\u3000\u304C\u3000<Points> \u304B\u3044\u3075\u304F\u3000\u3057\u305F\uFF01"
-  onEnemyDefeat: "<EnemyName> \u304C \u305F\u304A\u308C\u305F\uFF01"
+  onEnemyDefeat: "<EnemyName> \u306F \u305F\u304A\u308C\u305F\uFF01"
   youWin: "<PlayerName> \u306E \u304B\u3061\uFF01"
   onPlayerDefeat: "<PlayerName> \u306E \u305F\u3044\u308A\u3087\u304F\u3000\u304C\u3000\u306A\u304F\u306A\u3063\u305F"
   youLose: "\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC"
---- !u!114 &390941591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 390941586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c016549ab0ce345299c860d915226468, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &482500623
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,7 +773,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 390941591}
+      - m_Target: {fileID: 0}
         m_MethodName: CallPlayerAction
         m_Mode: 3
         m_Arguments:
@@ -913,8 +907,8 @@ RectTransform:
   m_Children:
   - {fileID: 1326785172}
   - {fileID: 503190923}
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 1750198927}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -997,7 +991,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 390941591}
+      - m_Target: {fileID: 0}
         m_MethodName: CallPlayerAction
         m_Mode: 3
         m_Arguments:
@@ -1052,6 +1046,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326785172}
+  - component: {fileID: 1326785173}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1080,6 +1075,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1326785173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1326785171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 153602f05da414df6a1b6450bad71a31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackButton: {fileID: 999928467}
+  healButton: {fileID: 1316372342}
+  resetButton: {fileID: 206927149}
 --- !u!1 &1709800356
 GameObject:
   m_ObjectHideFlags: 0
@@ -1090,7 +1099,6 @@ GameObject:
   - component: {fileID: 1709800359}
   - component: {fileID: 1709800358}
   - component: {fileID: 1709800357}
-  - component: {fileID: 1709800360}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1158,29 +1166,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!167 &1709800360
-AudioReverbZone:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1709800356}
-  m_Enabled: 1
-  m_MinDistance: 10
-  m_MaxDistance: 15
-  m_ReverbPreset: 1
-  m_Room: -1000
-  m_RoomHF: -100
-  m_DecayTime: 1.49
-  m_DecayHFRatio: 0.83
-  m_Reflections: -2602
-  m_ReflectionsDelay: 0.007
-  m_Reverb: 200
-  m_ReverbDelay: 0.011
-  m_HFReference: 5000
-  m_Diffusion: 100
-  m_Density: 100
-  m_LFReference: 250
-  m_RoomLF: 0
 --- !u!1 &1713805317
 GameObject:
   m_ObjectHideFlags: 0
@@ -1256,6 +1241,36 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1713805317}
   m_CullTransparentMesh: 0
+--- !u!1 &1750198926
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1750198927}
+  m_Layer: 0
+  m_Name: View
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1750198927
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1750198926}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.9024057, y: 2.09908, z: 0.073681206}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1868381428}
+  - {fileID: 1210060319}
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1789378405
 GameObject:
   m_ObjectHideFlags: 0
@@ -1266,6 +1281,7 @@ GameObject:
   - component: {fileID: 1789378406}
   - component: {fileID: 1789378408}
   - component: {fileID: 1789378407}
+  - component: {fileID: 1789378409}
   m_Layer: 5
   m_Name: BattleLog
   m_TagString: Untagged
@@ -1331,6 +1347,20 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1789378405}
   m_CullTransparentMesh: 0
+--- !u!114 &1789378409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1789378405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b56d4016092e4cc2a89427a5a72c10c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerName: 
+  EnemyName: 
+  EffectQuantity: 0
 --- !u!1 &1868381426
 GameObject:
   m_ObjectHideFlags: 0
@@ -1340,6 +1370,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1868381428}
   - component: {fileID: 1868381427}
+  - component: {fileID: 1868381429}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -1399,10 +1430,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1868381426}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6.9024057, y: -0.5990801, z: -0.073681206}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_Father: {fileID: 1750198927}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1868381429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1868381426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa96b46f7e0e74e6f827ce286a6b8593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

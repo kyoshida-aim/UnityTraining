@@ -2,20 +2,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class MessageView : MonoBehaviour {
-    public GameObject battleLog;
+    private Text battleLog;
     private string displayingMessage = string.Empty;
     private bool isContinuous;
     private readonly string waitText = "∇";
 
-    [HideInInspector]public string playerName;
-    [HideInInspector]public string enemyName;
-    [HideInInspector]public int effect_quantity;
+    [HideInInspector]public string PlayerName;
+    [HideInInspector]public string EnemyName;
+    [HideInInspector]public int EffectQuantity;
 
-    private void Start() {
-        isContinuous = false;
+    private void Awake() {
+        battleLog = GetComponent<Text>();
     }
 
-    public void Set(string message, bool wait = false) {
+    public void DisplayMessage(string message, bool wait = false) {
         message = join(message);
         message = addWaitText(message, wait);
         message = Translate(message);
@@ -46,9 +46,9 @@ public class MessageView : MonoBehaviour {
     // TODO : モデルやコントローラーを作成後参照しメッセージの変換ができるようにする
     private string Translate(string message) {
         message = message.Replace(
-                    "<PlayerName>", playerName).Replace(
-                        "<EnemyName>", enemyName).Replace(
-                            "<Points>", effect_quantity.ToString());
+                    "<PlayerName>", PlayerName).Replace(
+                        "<EnemyName>", EnemyName).Replace(
+                            "<Points>", EffectQuantity.ToString());
         return message;
     }
 }

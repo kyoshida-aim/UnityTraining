@@ -1,18 +1,17 @@
 using UnityEngine;
 
 public class EnemyView : MonoBehaviour {
-    public GameObject enemy;
     private SpriteRenderer spriteRenderer;
 
-    void Start() {
-        spriteRenderer = enemy.GetComponent<SpriteRenderer>();
+    void Awake() {
+        spriteRenderer = this.GetComponent<SpriteRenderer>();
     }
 
-    public void setSprite(Sprite sprite) {
+    public void SetSprite(Sprite sprite) {
         spriteRenderer.sprite = sprite;
     }
 
     public void OnDefeat() {
-        Destroy(enemy);
+        Destroy(this.gameObject);
     }
 }
