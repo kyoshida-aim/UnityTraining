@@ -5,26 +5,26 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour {
     public string ActorName = "キャラクター名";
-    public int hp = 10;
-    public int atk = 6;
-    public int dfc = 3;
+    public int Hp = 10;
+    public int Atk = 6;
+    public int Dfc = 3;
 
 
     // NOTE : モデル部分の切り出しをする際に大きく仕様変更する可能性アリ
     [HideInInspector]public int CurrentHP;
 
     void Start() {
-        CurrentHP = hp;
+        CurrentHP = Hp;
     }
 
-    public void increaseHP(int amount) {
-        CurrentHP = Math.Min(CurrentHP + amount, hp);
+    public void IncreaseHP(int amount) {
+        CurrentHP = Math.Min(CurrentHP + amount, Hp);
     }
-    public void decreaseHP(int amount) {
+    public void DecreaseHP(int amount) {
         CurrentHP = Math.Max(CurrentHP - amount, 0);
     }
 
     public float CurrentHPPercentage() {
-        return 100 * this.CurrentHP / this.hp;
+        return 100 * this.CurrentHP / this.Hp;
     }
 }

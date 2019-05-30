@@ -22,7 +22,7 @@ public class MessageView : MonoBehaviour {
         updateLog(message);
     }
 
-    public string join(string message) {
+    private string join(string message) {
         if (isContinuous) {
             isContinuous = false;
             return displayingMessage.Replace(waitText, string.Empty) + "\n" +  message;
@@ -30,7 +30,7 @@ public class MessageView : MonoBehaviour {
         return message;
     }
 
-    public string addWaitText(string message, bool wait) {
+    private string addWaitText(string message, bool wait) {
         if (wait) {
             isContinuous = true;
             return message + waitText;

@@ -14,9 +14,9 @@ public class ActorEditor : Editor {
 
     public virtual void OnEnable () {
         actorName = serializedObject.FindProperty("ActorName");
-        hp = serializedObject.FindProperty("hp");
-        atk = serializedObject.FindProperty("atk");
-        dfc = serializedObject.FindProperty("dfc");
+        hp = serializedObject.FindProperty("Hp");
+        atk = serializedObject.FindProperty("Atk");
+        dfc = serializedObject.FindProperty("Dfc");
     }
 
 	// 初期設定

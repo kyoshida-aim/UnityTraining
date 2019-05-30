@@ -81,7 +81,7 @@ public class AIRoutineDrawer : PropertyDrawer {
 			//各プロパティーの SerializedProperty を求める
 			var useTurnValue = property.FindPropertyRelative ("useTurnValue");
 			var turnValue = property.FindPropertyRelative ("turnValue");
-			var ConstOrMulti = property.FindPropertyRelative ("ConstOrMulti");
+			var ConstOrMulti = property.FindPropertyRelative ("constOrMulti");
 			var enemyHPTrigger = property.FindPropertyRelative ("enemyHPTrigger");
 			var enemyHP_ConditionValue = property.FindPropertyRelative ("enemyHP_ConditionValue");
 			var enemyHP_ConditionRange = property.FindPropertyRelative ("enemyHP_ConditionRange");

@@ -25,33 +25,33 @@ public class BattleController : MonoBehaviour {
         this.enemyView.SetSprite(this.enemy.CharacterSprite);
         this.player = GetComponent<Player>();
         this.battleText = GetComponent<BattleText>();
-        this.activatedActionList = new bool[this.enemy.routineList.Length];
+        this.activatedActionList = new bool[this.enemy.RoutineList.Length];
 
         messageView.PlayerName = player.ActorName;
         messageView.EnemyName = enemy.ActorName;
         messageView.DisplayMessage(this.battleText.BattleStart);
 
-        buttonView.OnAttackClick.AddListener(CallPlayerAttack);
-        buttonView.OnHealClick.AddListener(CallPlayerHeal);
-        buttonView.OnResetClick.AddListener(Reset);
+        buttonView.OnAttackClick.AddListener(callPlayerAttack);
+        buttonView.OnHealClick.AddListener(callPlayerHeal);
+        buttonView.OnResetClick.AddListener(reset);
     }
 
-    public void Reset() {
+    void reset() {
         SceneManager.LoadScene("RuleBaseAI");
     }
 
-    public void CallPlayerAttack () {
+   void callPlayerAttack () {
         this.playerAction = "Attack";
         processingTurnExecution();
     }
 
-    public void CallPlayerHeal () {
+    void callPlayerHeal () {
         this.playerAction = "Heal";
        processingTurnExecution();
     }
     
 
-    public void processingTurnExecution () {
+    void processingTurnExecution () {
 
         // ターンカウントを進める
         this.turnCount++;
@@ -60,7 +60,7 @@ public class BattleController : MonoBehaviour {
         SetEnemyAction();
 
         // プレイヤーと敵の双方の行動を実行
-        StartCoroutine("ExecuteAction");
+        StartCoroutine("executeAction");
 
     }
 
@@ -69,53 +69,53 @@ public class BattleController : MonoBehaviour {
         int counter = 0;
         bool satisfy_all_criteria;
 
-        foreach (var routine in this.enemy.routineList) {
+        foreach (var routine in this.enemy.RoutineList) {
             satisfy_all_criteria= true;
 
             // ターン数トリガー
-            if (routine.useTurnValue){
+            if (routine.UseTurnValue){
                 //条件を満たしていない時だけ次のループに移動する 
                 if (routine.ConstOrMulti == 0) {
-                    if (this.turnCount != routine.turnValue) {
+                    if (this.turnCount != routine.TurnValue) {
                         satisfy_all_criteria = false;
                     }
                 } else if (routine.ConstOrMulti == 1) {
-                    if (this.turnCount % routine.turnValue != 0) {
+                    if (this.turnCount % routine.TurnValue != 0) {
                         satisfy_all_criteria = false;
                     }
                 }
             }
 
             // 敵のHPトリガー
-            if (routine.enemyHPTrigger) {
+            if (routine.EnemyHPTrigger) {
                 // 0: 以上 1:以下
                 //条件を満たしていない時だけ次のループに移動する 
-                if (routine.enemyHP_ConditionRange == 0) {
-                    if ( !(enemy.CurrentHPPercentage() >= routine.enemyHP_ConditionValue) ) {
+                if (routine.EnemyHP_ConditionRange == 0) {
+                    if ( !(enemy.CurrentHPPercentage() >= routine.EnemyHP_ConditionValue) ) {
                             satisfy_all_criteria = false;
                     }
-                } else if (routine.enemyHP_ConditionRange == 1) {
-                    if ( !(enemy.CurrentHPPercentage() <= routine.enemyHP_ConditionValue) ) {
+                } else if (routine.EnemyHP_ConditionRange == 1) {
+                    if ( !(enemy.CurrentHPPercentage() <= routine.EnemyHP_ConditionValue) ) {
                             satisfy_all_criteria = false;
                     }
                 }
             }
 
             // 味方のHPトリガー
-            if (routine.playerHPTrigger) {
+            if (routine.PlayerHPTrigger) {
                 // 0: 以上 1:以下
                 //条件を満たしていない時だけ次のループに移動する 
-                if (routine.playerHP_ConditionRange == 0) {
-                    if ( !(player.CurrentHPPercentage() >= routine.playerHP_ConditionValue) ) {
+                if (routine.PlayerHP_ConditionRange == 0) {
+                    if ( !(player.CurrentHPPercentage() >= routine.PlayerHP_ConditionValue) ) {
                             satisfy_all_criteria = false;
                     }
-                } else if (routine.playerHP_ConditionRange == 1) {
-                    if ( !(player.CurrentHPPercentage() <= routine.playerHP_ConditionValue) ) {
+                } else if (routine.PlayerHP_ConditionRange == 1) {
+                    if ( !(player.CurrentHPPercentage() <= routine.PlayerHP_ConditionValue) ) {
                             satisfy_all_criteria = false;
                     }
                 }
             }
-            if ( satisfy_all_criteria && routine.actionOnce) {
+            if ( satisfy_all_criteria && routine.ActionOnce) {
                 if (activatedActionList[counter]) {
                     satisfy_all_criteria = false;
                 }
@@ -134,25 +134,25 @@ public class BattleController : MonoBehaviour {
             this.enemy.needRefresh = true;
             break;
         }
-        if (action.actionID == 0) {
+        if (action.ActionID == 0) {
             this.enemyAction = "Attack";
-        } else if (action.actionID == 1) {
+        } else if (action.ActionID == 1) {
             this.enemyAction = "Heal";
-        } else if (action.actionID == 2) {
+        } else if (action.ActionID == 2) {
             this.enemyAction = "Wait";
         }
     }
 
     // ダメージ計算方法の統一のため関数化
-    int CalculateDamage(int attack, int defence) {
+    int calculateDamage(int attack, int defence) {
         return Math.Max(attack - defence, 0);
     }
 
-    int CalculateHealing(int maxhp, int hp) {
+    int calculateHealing(int maxhp, int hp) {
         return Mathf.Clamp(maxhp - hp, 0, 3);
     }
 
-    private IEnumerator ExecuteAction() {
+    private IEnumerator executeAction() {
         // メッセージを時間差で変更するいい方法が思いつかなかったので楽な方法で処理する
         // 処理待ち中もボタンを押せるのでボタン連打厳禁
 
@@ -160,15 +160,15 @@ public class BattleController : MonoBehaviour {
         if (this.playerAction == "Attack") {
             messageView.DisplayMessage(this.battleText.OnPlayerAttack, true);
             yield return new WaitForSeconds (1.0f); // 1秒待つ
-            messageView.EffectQuantity = this.CalculateDamage(this.player.atk, this.enemy.dfc);
+            messageView.EffectQuantity = this.calculateDamage(this.player.Atk, this.enemy.Dfc);
             messageView.DisplayMessage(this.battleText.DealDamage);
-            this.enemy.decreaseHP(messageView.EffectQuantity);
+            this.enemy.DecreaseHP(messageView.EffectQuantity);
         } else if (this.playerAction == "Heal") {
             messageView.DisplayMessage(this.battleText.OnPlayerHeal, true);
             yield return new WaitForSeconds (1.0f); // 1秒待つ
             // maxHpを超えての回復はしない
             // 実際の回復量は計算する
-            messageView.EffectQuantity = this.CalculateHealing(this.player.hp, this.player.CurrentHP);
+            messageView.EffectQuantity = this.calculateHealing(this.player.Hp, this.player.CurrentHP);
             messageView.DisplayMessage(this.battleText.Healed);
         }
 
@@ -185,9 +185,9 @@ public class BattleController : MonoBehaviour {
         } else if (this.enemyAction == "Attack") {
             messageView.DisplayMessage(this.battleText.OnEnemyAttack, true);
             yield return new WaitForSeconds (1.0f); // 1秒待つ
-            messageView.EffectQuantity = this.CalculateDamage(this.enemy.atk, this.player.dfc);
+            messageView.EffectQuantity = this.calculateDamage(this.enemy.Atk, this.player.Dfc);
             messageView.DisplayMessage(this.battleText.TakeDamage);
-            this.player.decreaseHP(messageView.EffectQuantity);
+            this.player.DecreaseHP(messageView.EffectQuantity);
             if (this.player.CurrentHP <= 0) {
                 yield return new WaitForSeconds (1.0f); // 1秒待つ
                 messageView.DisplayMessage(this.battleText.OnPlayerDefeat);
@@ -199,9 +199,9 @@ public class BattleController : MonoBehaviour {
             yield return new WaitForSeconds (1.0f); // 1秒待つ
             // maxHpを超えての回復はしない
             // 実際の回復量は計算する
-            messageView.EffectQuantity = this.CalculateHealing(this.enemy.hp, this.enemy.CurrentHP);
+            messageView.EffectQuantity = this.calculateHealing(this.enemy.Hp, this.enemy.CurrentHP);
             messageView.DisplayMessage(this.battleText.Healed);
-            this.enemy.increaseHP(messageView.EffectQuantity);
+            this.enemy.IncreaseHP(messageView.EffectQuantity);
         } else if (this.enemyAction == "Wait") {
             messageView.DisplayMessage(this.battleText.EnemyWaiting);
         } 
