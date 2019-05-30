@@ -20,9 +20,7 @@ public class BattleController : MonoBehaviour {
     BattleText battleText;
     Enemy enemy;
     Player player;
-    public GameObject AttackButton;
-    public GameObject HealButton;
-    public GameObject ResetButton;
+    [SerializeField] private ButtonView buttonView;
     bool[] activatedActionList;
 
     void Start () {
@@ -38,9 +36,9 @@ public class BattleController : MonoBehaviour {
         messageView.enemyName = enemy.actorName;
         messageView.Set(this.battleText.BattleStart);
 
-        AttackButton.GetComponent<Button>().onClick.AddListener (CallPlayerAttack);
-        HealButton.GetComponent<Button>().onClick.AddListener (CallPlayerHeal);
-        ResetButton.GetComponent<Button>().onClick.AddListener (Reset);
+        buttonView.OnAttackClick.AddListener(CallPlayerAttack);
+        buttonView.OnHealClick.AddListener(CallPlayerHeal);
+        buttonView.OnResetClick.AddListener(Reset);
     }
 
     public void Reset() {
