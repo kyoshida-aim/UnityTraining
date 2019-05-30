@@ -7,6 +7,10 @@ public class MessageView : MonoBehaviour {
     private bool isContinuous;
     private readonly string waitText = "∇";
 
+    [HideInInspector]public string playerName;
+    [HideInInspector]public string enemyName;
+    [HideInInspector]public int effect_quantity;
+
     private void Start() {
         isContinuous = false;
     }
@@ -23,7 +27,7 @@ public class MessageView : MonoBehaviour {
             isContinuous = false;
             return displayingMessage.Replace(waitText, string.Empty) + "\n" +  message;
         }
-        return displayingMessage;
+        return message;
     }
 
     public string addWaitText(string message, bool wait) {
@@ -41,10 +45,10 @@ public class MessageView : MonoBehaviour {
 
     // TODO : モデルやコントローラーを作成後参照しメッセージの変換ができるようにする
     private string Translate(string message) {
-        // message = message.Replace(
-        //             "<PlayerName>", player.actorName).Replace(
-        //                 "<EnemyName>", enemy.actorName).Replace(
-        //                     "<Points>", this.points.ToString());
+        message = message.Replace(
+                    "<PlayerName>", playerName).Replace(
+                        "<EnemyName>", enemyName).Replace(
+                            "<Points>", effect_quantity.ToString());
         return message;
     }
 }
