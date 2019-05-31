@@ -15,25 +15,22 @@ public class EnemyParams :  ActorParams {
         // set { this.characterSprite = value; }
         get { return this.characterSprite; }
     }
-    public AIRoutine[] RoutineList {
-        get { return this.routine; }
-    }
 
-    public void UpdateRoutineListIndex(AIRoutine action) {
+    public AIRoutine[] RoutineList { get { return this.routine; } }
+    public int Index { get { return index; } }
+
+    public void UpdateRoutineListIndex(AIRoutineModel action)
+    {
         index = -1;
         int counter = 0;
         foreach(var routine in RoutineList)
         {
-            if (routine == action)
+            if (action.IsSame(routine))
             {
                 index = counter;
                 break;
             } 
             counter++;
         }
-    }
-
-    public int Index {
-        get { return index; }
     }
 }

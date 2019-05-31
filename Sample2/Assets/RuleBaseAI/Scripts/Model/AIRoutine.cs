@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 [Serializable]
@@ -29,5 +30,4 @@ public class AIRoutine {
     public int PlayerHP_ConditionRange { get { return this.playerHP_ConditionRange; } }
     public bool ActionOnce { get { return this.actionOnce; } }
     public int ActionID { get { return this.actionID; } }
-
 }
