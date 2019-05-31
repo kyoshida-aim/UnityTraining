@@ -99,7 +99,7 @@ public class AIRoutineDrawer : PropertyDrawer {
 				turnValue.intValue = Mathf.Max(
 				EditorGUI.IntField(turnValueRect,
 					"ターン数が",
-					turnValue.intValue), 0);
+					turnValue.intValue), 1);
 
 				ConstOrMulti.intValue = 
 					EditorGUI.Popup(ConstOrMultiRect,
