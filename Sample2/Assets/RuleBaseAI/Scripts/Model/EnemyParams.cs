@@ -8,7 +8,7 @@ public class EnemyParams :  ActorParams {
 
     [SerializeField] private Sprite characterSprite;
     [SerializeField] private AIRoutine[] routine;
-    private int index = -1;
+    [SerializeField] private int index;
 
     public Sprite CharacterSprite {
         // TODO : 挙動に影響しないなら消去する
