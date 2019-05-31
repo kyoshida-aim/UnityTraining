@@ -498,6 +498,17 @@ MonoBehaviour:
     playerHP_ConditionRange: 0
     actionOnce: 0
     actionID: 2
+  - useTurnValue: 0
+    turnValue: 2
+    constOrMulti: 0
+    enemyHPTrigger: 0
+    enemyHP_ConditionValue: 0
+    enemyHP_ConditionRange: 0
+    playerHPTrigger: 0
+    playerHP_ConditionValue: 0
+    playerHP_ConditionRange: 0
+    actionOnce: 0
+    actionID: 2
   index: 0
 --- !u!114 &390941590
 MonoBehaviour:
