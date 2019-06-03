@@ -73,7 +73,7 @@ public class Actor {
     }
 
     public int CalculateHealing() {
-        return Mathf.Max(this.maxHP - this.currentHP, 3);
+        return Mathf.Min(this.maxHP - this.currentHP, 3);
     }
 
     public bool IsDead() {
