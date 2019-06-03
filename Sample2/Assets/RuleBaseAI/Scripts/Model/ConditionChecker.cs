@@ -52,13 +52,13 @@ public class ConditionChecker {
 
     private bool EnableAction(AIRoutine routine) {
         if (!routine.ActionOnce) { return true; }
-        if (!ActionAlreadyUsed(routine.ActionID)) {
-            usedActionList.Add(routine.ActionID);
+        if (!ActionAlreadyUsed(routine.Action)) {
+            usedActionList.Add(routine.Action);
             return true;
         }
         return false;
     }
-    private bool ActionAlreadyUsed(int routineListindex) {
-        return usedActionList.Contains(routineListindex);
+    private bool ActionAlreadyUsed(ActionList action) {
+        return usedActionList.Contains(action);
     }
 }

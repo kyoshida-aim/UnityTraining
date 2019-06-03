@@ -4,7 +4,6 @@ using UnityEditor;
 [CustomPropertyDrawer (typeof(AIRoutine))]
 public class AIRoutineDrawer : PropertyDrawer {
 
-	string[] ActionList = {"ATTACK", "HEAL" , "WAIT"};
 	string[] Multiple = {"の時", "の倍数の時" };
 	string[] HigherorLower = {"以上", "以下" };
 	string percentageText = "%";
@@ -89,7 +88,7 @@ public class AIRoutineDrawer : PropertyDrawer {
 			var playerHP_ConditionValue = property.FindPropertyRelative ("playerHP_ConditionValue");
 			var playerHP_ConditionRange = property.FindPropertyRelative ("playerHP_ConditionRange");
 			var actionOnce = property.FindPropertyRelative ("actionOnce");
-			var actionID = property.FindPropertyRelative("actionID");
+			var action = property.FindPropertyRelative("action");
 
 			//各プロパティーの GUI を描画
 
@@ -153,7 +152,7 @@ public class AIRoutineDrawer : PropertyDrawer {
 			EditorGUI.PropertyField(actionOnceRect, actionOnce);
 
 			// 行動内容
-			actionID.intValue = EditorGUI.Popup(actionRect, "Action", actionID.intValue, ActionList);
+			action.enumValueIndex = (int)(ActionLIst)EditorGUI.EnumPopup(actionRect, "Action", new ActionList());
 		}
 	}
 }

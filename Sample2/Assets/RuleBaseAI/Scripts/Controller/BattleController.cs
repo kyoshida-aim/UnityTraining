@@ -10,9 +10,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(BattleText))]
 public class BattleController : MonoBehaviour {
     int turnCount = 0;
-    int effectQuantity;
-    string enemyAction = "Wait";
-    string playerAction = "Wait";
     private readonly string waitText = "∇";
     [SerializeField] private ButtonView buttonView;
     [SerializeField] private MessageView messageView;
@@ -39,9 +36,24 @@ public class BattleController : MonoBehaviour {
 
         UpdateMessageView(this.battleText.BattleStart);
 
+        RegisterButtonAction();
+    }
+
+    void RegisterButtonAction() {
+        EnableButtonAction();
+        buttonView.OnResetClick.AddListener(Reset);
+    }
+
+    // 攻撃と回復のボタンは有効・無効を切り替えたいので切り分け
+    void EnableButtonAction() {
         buttonView.OnAttackClick.AddListener(CallPlayerAttack);
         buttonView.OnHealClick.AddListener(CallPlayerHeal);
-        buttonView.OnResetClick.AddListener(Reset);
+    }
+    
+    // ボタンを無効化するというよりはボタンを押しても何も処理されないように変更する
+    void DisableButtonAction() {
+        buttonView.OnAttackClick.RemoveAllListeners();
+        buttonView.OnHealClick.RemoveAllListeners();
     }
 
     void Reset() {
@@ -49,19 +61,19 @@ public class BattleController : MonoBehaviour {
     }
 
    void CallPlayerAttack () {
-        this.playerAction = "Attack";
+        this.player.SetAttack();
         ProcessingTurnExecution();
     }
 
     void CallPlayerHeal () {
-        this.playerAction = "Heal";
+        this.player.SetHeal();
        ProcessingTurnExecution();
     }
     
-    private void UpdateMessageView(string message, bool wait = false){
+    private void UpdateMessageView(string message, int points = 0, bool wait = false){
         message = Join(message);
         message = AddWaitText(message, wait);
-        message = Translate(message);
+        message = Translate(message, points);
         messageView.UpdateLog(message);
     }
 
@@ -80,15 +92,17 @@ public class BattleController : MonoBehaviour {
         return message;
     }
 
-    private string Translate(string message) {
+    private string Translate(string message, int points) {
         message = message.Replace("<PlayerName>", this.player.Name)
                     .Replace("<EnemyName>", this.enemy.Name)
-                    .Replace("<Points>", effectQuantity.ToString());
+                    .Replace("<Points>", points.ToString());
         return message;
     }
 
     void ProcessingTurnExecution () {
-
+        // 連打対策にボタンを無効化
+        DisableButtonAction();
+        
         // ターンカウントを進める
         this.turnCount++;
 
@@ -106,24 +120,30 @@ public class BattleController : MonoBehaviour {
 
     void SetEnemyAction() {
         // 長すぎる。インデント整理したい
-        var action = conditionChecker.DetermineEnemyAction(enemyParams.RoutineList,
+        var routine = conditionChecker.DetermineEnemyAction(enemyParams.RoutineList,
                                                 turnCount,
                                                 player.CurrentHPPercentage,
                                                 enemy.CurrentHPPercentage);
         #if UNITY_EDITOR
-            enemyParams.UpdateRoutineListIndex(action);
+            enemyParams.UpdateRoutineListIndex(routine);
         #endif
-        this.enemyAction = SetAction(action.ActionID);
+        SetAction(routine.Action);
     }
 
     // TODO : 敵の行動を決定する方法を変更する
-    private string SetAction(int actionID) {
-        if (actionID == 0) {
-            return "Attack";
-        } else if (actionID == 1) {
-           return "Heal";
+    private void SetAction(ActionList action) {
+        switch(action)
+        {
+            case ActionList.Attack:
+                this.enemy.SetAttack();
+                break;
+            case ActionList.Heal:
+                this.enemy.SetHeal();
+                break;
+            case ActionList.Wait:
+                this.enemy.SetWait();
+                break;
         }
-        return "Wait";
     }
     private int CalculateDamage(Actor attacker, Actor opponent) {
         return attacker.CalculateDamageDealtTo(opponent);
@@ -138,55 +158,121 @@ public class BattleController : MonoBehaviour {
         // 処理待ち中もボタンを押せるのでボタン連打厳禁
 
         // プレイヤー側の行動実行
-        if (this.playerAction == "Attack") {
-            UpdateMessageView(this.battleText.OnPlayerAttack, true);
-            yield return Wait(1.0f); // 1秒待つ
-            effectQuantity = this.CalculateDamage(this.player, this.enemy);
-            this.enemy.DecreaseHP(effectQuantity);
-            UpdateMessageView(this.battleText.DealDamage);
-        } else if (this.playerAction == "Heal") {
-            UpdateMessageView(this.battleText.OnPlayerHeal, true);
-            yield return Wait(1.0f); // 1秒待つ
-            // maxHpを超えての回復はしない
-            // 実際の回復量は計算する
-            effectQuantity = this.CalculateHealing(this.player);
-            this.player.IncreaseHP(effectQuantity);
-            UpdateMessageView(this.battleText.Healed);
-        }
+        // NOTE : 
+        // 状態異常等の「死んでないが行動できない」状態を実装するなら行動可能かどうかを取得する関数を用意したい。
+        ExecutePlayerAction();
 
         // 敵側の行動処理に入る前にウェイトを入れる
         yield return Wait(1.0f);
 
-        // 敵側の行動実行(死亡確認も同時に行う)
+        // 敵側の状態確認
+        CheckEnemyStatus();
+        
+        // 敵が死亡しているならこれ以降の処理は行わない
+        if (this.enemy.IsDead()) {
+            yield return null;
+        }
+
+        // 敵側の行動実行
+        // NOTE : 
+        // 状態異常等の「死んでないが行動できない」状態を実装するなら行動可能かどうかを取得する関数を用意したい。
+        if (!this.enemy.IsDead()) {
+            ExecuteEnemyAction();
+        }
+
+        CheckPlayerStatus();
+        // プレイヤーが死亡しているならボタンの有効化を行わない
+        if (this.player.IsDead()) {
+            yield return null;
+        }
+
+        // 全ての処理が終わったらボタン入力を受け付けるようにする
+        EnableButtonAction();
+    }
+
+    private void ExecutePlayerAction() {
+        switch(this.player.Action)
+        {
+            case ActionList.Attack:
+                PlayerAttack();
+                break;
+            case ActionList.Heal:
+                PlayerHeal();
+                break;
+        }
+    }
+
+    private IEnumerator PlayerAttack() {
+        UpdateMessageView(this.battleText.OnPlayerAttack, wait: true);
+        yield return Wait(1.0f);
+        int effectQuantity = this.CalculateDamage(this.player, this.enemy);
+        this.enemy.DecreaseHP(effectQuantity);
+        UpdateMessageView(this.battleText.DealDamage, points: effectQuantity);
+    }
+
+    private IEnumerator PlayerHeal() {
+        UpdateMessageView(this.battleText.OnPlayerHeal, wait: true);
+        yield return Wait(1.0f);
+        // maxHpを超えての回復はしない
+        // 実際の回復量は計算する
+        int effectQuantity = this.CalculateHealing(this.player);
+        this.player.IncreaseHP(effectQuantity);
+        UpdateMessageView(this.battleText.Healed, points: effectQuantity);
+    }
+
+    private IEnumerator CheckEnemyStatus() {
         if (this.enemy.IsDead()) {
             enemyView.OnDefeat();
-            // this.enemyView.OnDefeat();
-            UpdateMessageView(this.battleText.OnEnemyDefeat, true);
-            yield return Wait(1.0f); // 1秒待つ
+            UpdateMessageView(this.battleText.OnEnemyDefeat, wait: true);
+            yield return Wait(1.0f);
             UpdateMessageView(this.battleText.YouWin);
-        } else if (this.enemyAction == "Attack") {
-            UpdateMessageView(this.battleText.OnEnemyAttack, true);
-            yield return Wait(1.0f); // 1秒待つ
-            effectQuantity = this.CalculateDamage(this.enemy, this.player);
-            UpdateMessageView(this.battleText.TakeDamage);
-            this.player.DecreaseHP(effectQuantity);
-            if (this.player.IsDead()) {
-                yield return Wait(1.0f); // 1秒待つ
-                UpdateMessageView(this.battleText.OnPlayerDefeat);
-                yield return Wait(1.0f);
-                UpdateMessageView(this.battleText.YouLose);
-            }
-        } else if (this.enemyAction == "Heal") {
-            UpdateMessageView(this.battleText.OnEnemyHeal, true);
-            yield return Wait(1.0f); // 1秒待つ
-            // maxHpを超えての回復はしない
-            // 実際の回復量は計算する
-            effectQuantity = this.CalculateHealing(this.enemy);
-            UpdateMessageView(this.battleText.Healed);
-            this.enemy.IncreaseHP(effectQuantity);
-        } else if (this.enemyAction == "Wait") {
-            UpdateMessageView(this.battleText.EnemyWaiting);
-        } 
+        }
+    }
+
+    private void ExecuteEnemyAction() {
+        switch(this.enemy.Action)
+        {
+            case ActionList.Attack:
+                EnemyAttack();
+                break;
+            case ActionList.Heal:
+                EnemyHeal();
+                break;
+            case ActionList.Wait:
+                EnemyWait();
+                break;
+        }
+    }
+
+    private IEnumerator EnemyAttack() {
+        UpdateMessageView(this.battleText.OnEnemyAttack, wait: true);
+        yield return Wait(1.0f);
+        int effectQuantity = this.CalculateDamage(this.enemy, this.player);
+        UpdateMessageView(this.battleText.TakeDamage);
+        this.player.DecreaseHP(effectQuantity);
+    }
+
+    private IEnumerator EnemyHeal() {
+        UpdateMessageView(this.battleText.OnEnemyHeal, wait: true);
+        yield return Wait(1.0f);
+        // maxHpを超えての回復はしない
+        // 実際の回復量は計算する
+        int effectQuantity = this.CalculateHealing(this.enemy);
+        UpdateMessageView(this.battleText.Healed);
+        this.enemy.IncreaseHP(effectQuantity);
+    }
+
+    private void EnemyWait() {
+        UpdateMessageView(this.battleText.EnemyWaiting);
+    }
+
+    private IEnumerator CheckPlayerStatus() {
+        if (this.player.IsDead()) {
+            yield return Wait(1.0f);
+            UpdateMessageView(this.battleText.OnPlayerDefeat);
+            yield return Wait(1.0f);
+            UpdateMessageView(this.battleText.YouLose);
+        }
     }
     private IEnumerator Wait(float seconds) {
         yield return new WaitForSeconds(seconds);

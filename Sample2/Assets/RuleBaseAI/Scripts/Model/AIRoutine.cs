@@ -16,7 +16,7 @@ public class AIRoutine {
     [SerializeField] private int playerHP_ConditionValue;
     [SerializeField] private int playerHP_ConditionRange;
     [SerializeField] private bool actionOnce;
-    [SerializeField] private int actionID;
+    [SerializeField] private ActionList action;
 
     public bool UseTurnValue { get { return this.useTurnValue; } }
     public int TurnValue { get { return this.turnValue; } }
@@ -28,6 +28,6 @@ public class AIRoutine {
     public int PlayerHP_ConditionValue { get { return this.playerHP_ConditionValue; } }
     public int PlayerHP_ConditionRange { get { return this.playerHP_ConditionRange; } }
     public bool ActionOnce { get { return this.actionOnce; } }
-    public int ActionID { get { return this.actionID; } }
+    public ActionList Action { get { return this.action; } }
 
 }
