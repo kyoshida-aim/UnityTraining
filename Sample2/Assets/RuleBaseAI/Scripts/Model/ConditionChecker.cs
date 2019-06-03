@@ -12,7 +12,7 @@ public class ConditionChecker {
     {
         foreach (var routine in routineList)
         {
-            if (satisfyAllConditions(routine, turnCount, playerHPPecentage, enemyHPPercentage))
+            if (SatisfyAllConditions(routine, turnCount, playerHPPecentage, enemyHPPercentage))
             {
                return routine;
             }
@@ -21,44 +21,44 @@ public class ConditionChecker {
     }
 
     // HACK : インデント整理
-    private bool satisfyAllConditions (
+    private bool SatisfyAllConditions (
         AIRoutine routine, int turnCount,
         float playerHPPecentage, float enemyHPPercentage)
     {
-        if (!satisfyTurnCondition(routine, turnCount)) { return false; }
-        if (!satisfyEnemyHPCondition(routine, enemyHPPercentage)) { return false; }
-        if (!satisfyPlayerHPCondition(routine, playerHPPecentage)) { return false; }
-        if (!enableAction(routine)) { return false; }
+        if (!SatisfyTurnCondition(routine, turnCount)) { return false; }
+        if (!SatisfyEnemyHPCondition(routine, enemyHPPercentage)) { return false; }
+        if (!SatisfyPlayerHPCondition(routine, playerHPPecentage)) { return false; }
+        if (!EnableAction(routine)) { return false; }
         return true;
     }
 
-    private bool satisfyTurnCondition(AIRoutine routine, int turnCount) {
+    private bool SatisfyTurnCondition(AIRoutine routine, int turnCount) {
         if (!routine.UseTurnValue) { return true; }
         if (routine.ConstOrMulti == 0) { return turnCount == routine.TurnValue; }
         return turnCount % routine.TurnValue == 0;
     }
 
-    private bool satisfyEnemyHPCondition(AIRoutine routine, float HPPercentage) {
+    private bool SatisfyEnemyHPCondition(AIRoutine routine, float HPPercentage) {
         if (!routine.EnemyHPTrigger) { return true; }
         if (routine.EnemyHP_ConditionRange == 0) { return HPPercentage > routine.EnemyHP_ConditionValue; }
         return HPPercentage < routine.EnemyHP_ConditionValue;
     }
 
-    private bool satisfyPlayerHPCondition(AIRoutine routine, float HPPercentage) {
+    private bool SatisfyPlayerHPCondition(AIRoutine routine, float HPPercentage) {
         if (!routine.PlayerHPTrigger) { return true; }
         if (routine.PlayerHP_ConditionRange == 0) { return HPPercentage > routine.PlayerHP_ConditionValue; }
         return HPPercentage < routine.PlayerHP_ConditionValue;
     }
 
-    private bool enableAction(AIRoutine routine) {
+    private bool EnableAction(AIRoutine routine) {
         if (!routine.ActionOnce) { return true; }
-        if (!actionAlreadyUsed(routine.ActionID)) {
+        if (!ActionAlreadyUsed(routine.ActionID)) {
             usedActionList.Add(routine.ActionID);
             return true;
         }
         return false;
     }
-    private bool actionAlreadyUsed(int routineListindex) {
+    private bool ActionAlreadyUsed(int routineListindex) {
         return usedActionList.Contains(routineListindex);
     }
 }

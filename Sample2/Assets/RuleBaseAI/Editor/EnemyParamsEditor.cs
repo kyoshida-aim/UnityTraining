@@ -44,13 +44,13 @@ public class EnemyParamsEditor : ActorEditor {
         EditorGUILayout.IntSlider(this.atk, MinParam, MaxParam);
         EditorGUILayout.IntSlider(this.dfc, MinParam, MaxParam);
 
-        updateIndex();
+        UpdateIndex();
         reorderableList.DoLayoutList ();
 
         serializedObject.ApplyModifiedProperties ();
     }
 
-    private void updateIndex() {
+    private void UpdateIndex() {
         settings = (EnemyParams) target;
         if (settings.Index != reorderableList.index){
             reorderableList.index = settings.Index;
