@@ -3,7 +3,16 @@ using UnityEditor;
 
 [CustomPropertyDrawer (typeof(AIRoutine))]
 public class AIRoutineDrawer : PropertyDrawer {
-
+    
+    // TODO :
+    // ActionList.cs内で定義したものと全く同じものを使用している。
+    // Editorフォルダは定義域が違うためかScripts内のActionList.csを読み込めないため。
+    public enum ActionList
+    {
+    Attack,
+    Heal,
+    Wait,
+    }
 	string[] Multiple = {"の時", "の倍数の時" };
 	string[] HigherorLower = {"以上", "以下" };
 	string percentageText = "%";
@@ -152,7 +161,7 @@ public class AIRoutineDrawer : PropertyDrawer {
 			EditorGUI.PropertyField(actionOnceRect, actionOnce);
 
 			// 行動内容
-			action.enumValueIndex = (int)(ActionLIst)EditorGUI.EnumPopup(actionRect, "Action", new ActionList());
+			action.enumValueIndex = (int)(ActionList)EditorGUI.Popup(actionRect, "Action", action.enumValueIndex, action.enumNames);
 		}
 	}
 }

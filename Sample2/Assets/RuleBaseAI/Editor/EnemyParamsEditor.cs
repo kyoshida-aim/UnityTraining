@@ -52,7 +52,8 @@ public class EnemyParamsEditor : ActorEditor {
 
     private void UpdateIndex() {
         settings = (EnemyParams) target;
-        if (settings.Index != reorderableList.index){
+        if (settings.NeedRefresh) {
+            settings.NeedRefresh = false;
             reorderableList.index = settings.Index;
         }
     }

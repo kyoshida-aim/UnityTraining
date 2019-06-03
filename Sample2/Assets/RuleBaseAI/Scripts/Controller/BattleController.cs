@@ -16,21 +16,18 @@ public class BattleController : MonoBehaviour {
     [SerializeField] private EnemyView enemyView;
     BattleText battleText;
     EnemyParams enemyParams;
-    Actor enemy;
+    Enemy enemy;
     PlayerParams playerParams;
-    Actor player;
-
-    ConditionChecker conditionChecker;
+    Player player;
 
     void Start () {
-        this.conditionChecker = new ConditionChecker();
 
         this.enemyParams = GetComponent<EnemyParams>();
-        this.enemy = new Actor(enemyParams);
+        this.enemy = new Enemy(enemyParams);
         this.enemyView.SetSprite(this.enemyParams.CharacterSprite);
 
         this.playerParams = GetComponent<PlayerParams>();
-        this.player = new Actor(playerParams);
+        this.player = new Player(playerParams);
 
         this.battleText = GetComponent<BattleText>();
 
@@ -119,32 +116,13 @@ public class BattleController : MonoBehaviour {
     }
 
     void SetEnemyAction() {
-        // 長すぎる。インデント整理したい
-        var routine = conditionChecker.DetermineEnemyAction(enemyParams.RoutineList,
-                                                turnCount,
-                                                player.CurrentHPPercentage,
-                                                enemy.CurrentHPPercentage);
+        int inspectorIndex = this.enemy.DetermineEnemyAction(turnCount, player.CurrentHPPercentage);
         #if UNITY_EDITOR
-            enemyParams.UpdateRoutineListIndex(routine);
+            enemyParams.Index = inspectorIndex;
+            enemyParams.NeedRefresh = true;
         #endif
-        SetAction(routine.Action);
     }
 
-    // TODO : 敵の行動を決定する方法を変更する
-    private void SetAction(ActionList action) {
-        switch(action)
-        {
-            case ActionList.Attack:
-                this.enemy.SetAttack();
-                break;
-            case ActionList.Heal:
-                this.enemy.SetHeal();
-                break;
-            case ActionList.Wait:
-                this.enemy.SetWait();
-                break;
-        }
-    }
     private int CalculateDamage(Actor attacker, Actor opponent) {
         return attacker.CalculateDamageDealtTo(opponent);
     }
@@ -160,46 +138,49 @@ public class BattleController : MonoBehaviour {
         // プレイヤー側の行動実行
         // NOTE : 
         // 状態異常等の「死んでないが行動できない」状態を実装するなら行動可能かどうかを取得する関数を用意したい。
-        ExecutePlayerAction();
+        yield return ExecutePlayerAction();
 
         // 敵側の行動処理に入る前にウェイトを入れる
         yield return Wait(1.0f);
 
         // 敵側の状態確認
-        CheckEnemyStatus();
+        yield return CheckEnemyStatus();
         
         // 敵が死亡しているならこれ以降の処理は行わない
         if (this.enemy.IsDead()) {
-            yield return null;
+            yield break;
         }
 
         // 敵側の行動実行
         // NOTE : 
         // 状態異常等の「死んでないが行動できない」状態を実装するなら行動可能かどうかを取得する関数を用意したい。
         if (!this.enemy.IsDead()) {
-            ExecuteEnemyAction();
+            yield return ExecuteEnemyAction();
         }
 
-        CheckPlayerStatus();
+        yield return CheckPlayerStatus();
         // プレイヤーが死亡しているならボタンの有効化を行わない
         if (this.player.IsDead()) {
-            yield return null;
+            yield break;
         }
 
         // 全ての処理が終わったらボタン入力を受け付けるようにする
         EnableButtonAction();
     }
 
-    private void ExecutePlayerAction() {
+    private IEnumerator ExecutePlayerAction() {
         switch(this.player.Action)
         {
             case ActionList.Attack:
-                PlayerAttack();
+                yield return PlayerAttack();
                 break;
             case ActionList.Heal:
-                PlayerHeal();
+                yield return PlayerHeal();
                 break;
         }
+
+        // Unityエディター側の警告回避用。これが呼び出されることがあってはいけない
+        yield return null;
     }
 
     private IEnumerator PlayerAttack() {
@@ -229,26 +210,28 @@ public class BattleController : MonoBehaviour {
         }
     }
 
-    private void ExecuteEnemyAction() {
+    private IEnumerator ExecuteEnemyAction() {
         switch(this.enemy.Action)
         {
             case ActionList.Attack:
-                EnemyAttack();
+                yield return EnemyAttack();
                 break;
             case ActionList.Heal:
-                EnemyHeal();
+                yield return EnemyHeal();
                 break;
             case ActionList.Wait:
-                EnemyWait();
+                yield return EnemyWait();
                 break;
         }
+        // Unityエディター側の警告回避用。これが呼び出されることがあってはいけない
+        yield return null;
     }
 
     private IEnumerator EnemyAttack() {
         UpdateMessageView(this.battleText.OnEnemyAttack, wait: true);
         yield return Wait(1.0f);
         int effectQuantity = this.CalculateDamage(this.enemy, this.player);
-        UpdateMessageView(this.battleText.TakeDamage);
+        UpdateMessageView(this.battleText.TakeDamage, points: effectQuantity);
         this.player.DecreaseHP(effectQuantity);
     }
 
@@ -258,12 +241,13 @@ public class BattleController : MonoBehaviour {
         // maxHpを超えての回復はしない
         // 実際の回復量は計算する
         int effectQuantity = this.CalculateHealing(this.enemy);
-        UpdateMessageView(this.battleText.Healed);
+        UpdateMessageView(this.battleText.Healed, points: effectQuantity);
         this.enemy.IncreaseHP(effectQuantity);
     }
 
-    private void EnemyWait() {
+    private IEnumerator EnemyWait() {
         UpdateMessageView(this.battleText.EnemyWaiting);
+        yield return null;
     }
 
     private IEnumerator CheckPlayerStatus() {

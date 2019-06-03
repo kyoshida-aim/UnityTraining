@@ -32,10 +32,6 @@ public class Actor {
         this.action = ActionList.Attack;
     }
 
-    public void SetWait() {
-        this.action = ActionList.Wait;
-    }
-
     // NOTE : モデル部分の切り出しをする際に大きく仕様変更する可能性アリ
     protected int currentHP;
 

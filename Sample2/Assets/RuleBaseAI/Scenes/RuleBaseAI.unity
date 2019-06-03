@@ -373,46 +373,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &318424457
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 318424459}
-  - component: {fileID: 318424458}
-  m_Layer: 0
-  m_Name: Test
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &318424458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 318424457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2be0c5b2c5b1446e9a630f35dd2a05bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &318424459
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 318424457}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &390941586
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,7 +417,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &390941589
 MonoBehaviour:
@@ -486,7 +446,7 @@ MonoBehaviour:
     playerHP_ConditionValue: 0
     playerHP_ConditionRange: 0
     actionOnce: 0
-    actionID: 1
+    action: 2
   - useTurnValue: 1
     turnValue: 2
     constOrMulti: 0
@@ -497,18 +457,7 @@ MonoBehaviour:
     playerHP_ConditionValue: 0
     playerHP_ConditionRange: 0
     actionOnce: 0
-    actionID: 2
-  - useTurnValue: 0
-    turnValue: 2
-    constOrMulti: 0
-    enemyHPTrigger: 0
-    enemyHP_ConditionValue: 0
-    enemyHP_ConditionRange: 0
-    playerHPTrigger: 0
-    playerHP_ConditionValue: 0
-    playerHP_ConditionRange: 0
-    actionOnce: 0
-    actionID: 2
+    action: 1
   index: 0
 --- !u!114 &390941590
 MonoBehaviour:
@@ -1086,6 +1035,46 @@ MonoBehaviour:
   attackButton: {fileID: 999928467}
   healButton: {fileID: 1316372342}
   resetButton: {fileID: 206927149}
+--- !u!1 &1676367233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1676367235}
+  - component: {fileID: 1676367234}
+  m_Layer: 0
+  m_Name: Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1676367234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1676367233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be0c5b2c5b1446e9a630f35dd2a05bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1676367235
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1676367233}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.9024057, y: 2.09908, z: 0.073681206}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1709800356
 GameObject:
   m_ObjectHideFlags: 0
@@ -1266,7 +1255,7 @@ Transform:
   - {fileID: 1868381428}
   - {fileID: 1210060319}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1789378405
 GameObject:
