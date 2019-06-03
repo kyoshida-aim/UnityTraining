@@ -11,8 +11,6 @@ public class EnemyParams :  ActorParams {
     [SerializeField] private int index;
 
     public Sprite CharacterSprite {
-        // TODO : 挙動に影響しないなら消去する
-        // set { this.characterSprite = value; }
         get { return this.characterSprite; }
     }
     public AIRoutine[] RoutineList {
