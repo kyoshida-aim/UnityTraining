@@ -34,11 +34,22 @@ public class BattleController : MonoBehaviour {
         UpdateMessageView(this.battleText.BattleStart);
 
         RegisterButtonAction();
+        RegisterPlayerAction();
+        RegisterEnemyAction();
     }
 
     void RegisterButtonAction() {
         EnableButtonAction();
         buttonView.OnResetClick.AddListener(Reset);
+    }
+    void RegisterPlayerAction() {
+        this.player.OnHeal.AddListener(OnPlayerHeal);
+        this.player.OnDamage.AddListener(OnPlayerDamage);
+    }
+
+    void RegisterEnemyAction() {
+        this.enemy.OnHeal.AddListener(OnEnemyHeal);
+        this.enemy.OnDamage.AddListener(OnEnemyDamage);
     }
 
     // 攻撃と回復のボタンは有効・無効を切り替えたいので切り分け
@@ -46,7 +57,7 @@ public class BattleController : MonoBehaviour {
         buttonView.OnAttackClick.AddListener(CallPlayerAttack);
         buttonView.OnHealClick.AddListener(CallPlayerHeal);
     }
-    
+
     // ボタンを無効化するというよりはボタンを押しても何も処理されないように変更する
     void DisableButtonAction() {
         buttonView.OnAttackClick.RemoveAllListeners();
@@ -67,6 +78,20 @@ public class BattleController : MonoBehaviour {
        ProcessingTurnExecution();
     }
     
+
+    void OnPlayerHeal(int amount) {
+        UpdateMessageView(this.battleText.Healed, points: amount);
+    }
+    void OnPlayerDamage(int amount) {
+        UpdateMessageView(this.battleText.TakeDamage, points: amount);
+    }
+    void OnEnemyHeal(int amount) {
+        UpdateMessageView(this.battleText.Healed, points: amount);
+    }
+    void OnEnemyDamage(int amount) {
+        UpdateMessageView(this.battleText.DealDamage, points: amount);
+    }
+
     private void UpdateMessageView(string message, int points = 0, bool wait = false){
         message = Join(message);
         message = AddWaitText(message, wait);
@@ -123,14 +148,6 @@ public class BattleController : MonoBehaviour {
         #endif
     }
 
-    private int CalculateDamage(Actor attacker, Actor opponent) {
-        return attacker.CalculateDamageDealtTo(opponent);
-    }
-
-    private int CalculateHealing(Actor actor) {
-        return actor.CalculateHealing();
-    }
-
     private IEnumerator ExecuteAction() {
         // メッセージを時間差で変更するいい方法が思いつかなかったので楽な方法で処理する
         // 処理待ち中もボタンを押せるのでボタン連打厳禁
@@ -184,9 +201,7 @@ public class BattleController : MonoBehaviour {
     private IEnumerator PlayerAttack() {
         UpdateMessageView(this.battleText.OnPlayerAttack, wait: true);
         yield return Wait(1.0f);
-        int effectQuantity = this.CalculateDamage(this.player, this.enemy);
-        this.enemy.DecreaseHP(effectQuantity);
-        UpdateMessageView(this.battleText.DealDamage, points: effectQuantity);
+        this.enemy.Damage<Player>(ref this.player);
     }
 
     private IEnumerator PlayerHeal() {
@@ -194,9 +209,8 @@ public class BattleController : MonoBehaviour {
         yield return Wait(1.0f);
         // maxHpを超えての回復はしない
         // 実際の回復量は計算する
-        int effectQuantity = this.CalculateHealing(this.player);
-        this.player.IncreaseHP(effectQuantity);
-        UpdateMessageView(this.battleText.Healed, points: effectQuantity);
+        this.player.Heal();
+
     }
 
     private IEnumerator CheckEnemyStatus() {
@@ -228,9 +242,7 @@ public class BattleController : MonoBehaviour {
     private IEnumerator EnemyAttack() {
         UpdateMessageView(this.battleText.OnEnemyAttack, wait: true);
         yield return Wait(1.0f);
-        int effectQuantity = this.CalculateDamage(this.enemy, this.player);
-        UpdateMessageView(this.battleText.TakeDamage, points: effectQuantity);
-        this.player.DecreaseHP(effectQuantity);
+        this.player.Damage<Enemy>(ref this.enemy);
     }
 
     private IEnumerator EnemyHeal() {
@@ -238,9 +250,7 @@ public class BattleController : MonoBehaviour {
         yield return Wait(1.0f);
         // maxHpを超えての回復はしない
         // 実際の回復量は計算する
-        int effectQuantity = this.CalculateHealing(this.enemy);
-        UpdateMessageView(this.battleText.Healed, points: effectQuantity);
-        this.enemy.IncreaseHP(effectQuantity);
+        this.enemy.Heal();
     }
 
     private IEnumerator EnemyWait() {

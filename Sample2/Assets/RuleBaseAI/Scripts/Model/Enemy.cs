@@ -4,7 +4,6 @@ public class Enemy : Actor {
 
     private ArrayList usedActionList = new ArrayList();
     private AIRoutine[] routineList;
-
     // 初期化
     public Enemy(EnemyParams param) : base(param)
     {
