@@ -1355,6 +1355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff65d33d677d435a9fd1d7c9b8f7c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battleLog: {fileID: 1789378407}
 --- !u!1 &1868381426
 GameObject:
   m_ObjectHideFlags: 0
