@@ -154,9 +154,7 @@ public class BattleController : MonoBehaviour {
         // 敵側の行動実行
         // NOTE : 
         // 状態異常等の「死んでないが行動できない」状態を実装するなら行動可能かどうかを取得する関数を用意したい。
-        if (!this.enemy.IsDead()) {
-            yield return ExecuteEnemyAction();
-        }
+        yield return ExecuteEnemyAction();
 
         yield return CheckPlayerStatus();
         // プレイヤーが死亡しているならボタンの有効化を行わない
