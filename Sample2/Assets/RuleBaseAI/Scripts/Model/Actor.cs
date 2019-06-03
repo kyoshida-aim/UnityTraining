@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
-public class MyIntEvent : UnityEvent<int>
+public class MyIntEvent : UnityEvent<int, bool>
 {
 }
 
@@ -58,16 +58,16 @@ public class Actor {
     {
         int amount = CalculateHealing();
         IncreaseHP(amount);
-        OnHeal.Invoke(amount);
+        OnHeal.Invoke(amount, false);
     }
-    public void Damage<T>(ref T opponent) where T : Actor
+    public void DealDamageTo<T>(ref T opponent) where T : Actor
     {
-        int amount = CalculateDamageDealtTo<T>(ref opponent);
-        DecreaseHP(amount);
-        OnDamage.Invoke(amount);
+        int amount = CalculateDamage<T>(ref opponent);
+        opponent.DecreaseHP(amount);
+        OnDamage.Invoke(amount, opponent.IsDead());
     }
 
-    public int CalculateDamageDealtTo<T> (ref T opponent) where T : Actor
+    public int CalculateDamage<T> (ref T opponent) where T : Actor
     {
         return Mathf.Max(this.atk - opponent.Dfc, 0);
     }

@@ -43,12 +43,12 @@ public class BattleController : MonoBehaviour {
         buttonView.OnResetClick.AddListener(Reset);
     }
     void RegisterPlayerAction() {
-        this.player.OnHeal.AddListener(OnPlayerHeal);
+        this.player.OnHeal.AddListener((amount, isDead)=>OnPlayerHeal(amount));
         this.player.OnDamage.AddListener(OnPlayerDamage);
     }
 
     void RegisterEnemyAction() {
-        this.enemy.OnHeal.AddListener(OnEnemyHeal);
+        this.enemy.OnHeal.AddListener((amount, isDead)=>OnEnemyHeal(amount));
         this.enemy.OnDamage.AddListener(OnEnemyDamage);
     }
 
@@ -82,16 +82,39 @@ public class BattleController : MonoBehaviour {
     void OnPlayerHeal(int amount) {
         UpdateMessageView(this.battleText.Healed, points: amount);
     }
-    void OnPlayerDamage(int amount) {
-        UpdateMessageView(this.battleText.TakeDamage, points: amount);
+    void OnPlayerDamage(int amount, bool isDead) {
+        UpdateMessageView(this.battleText.DealDamage, points: amount);
+        if (isDead)
+        {
+            StartCoroutine("OnEnemyDead");
+        }
     }
+
+    private IEnumerator OnEnemyDead() {
+        yield return Wait(1.0f);
+        enemyView.OnDefeat();
+        UpdateMessageView(this.battleText.OnEnemyDefeat, wait: true);
+        yield return Wait(1.0f);
+        UpdateMessageView(this.battleText.YouWin);
+    }
+
     void OnEnemyHeal(int amount) {
         UpdateMessageView(this.battleText.Healed, points: amount);
     }
-    void OnEnemyDamage(int amount) {
-        UpdateMessageView(this.battleText.DealDamage, points: amount);
+    void OnEnemyDamage(int amount, bool isDead) {
+        UpdateMessageView(this.battleText.TakeDamage, points: amount);
+        if (isDead)
+        {
+            StartCoroutine(OnPlayerDead());
+        }
     }
 
+    private IEnumerator OnPlayerDead() {
+        yield return Wait(1.0f);
+        UpdateMessageView(this.battleText.OnPlayerDefeat);
+        yield return Wait(1.0f);
+        UpdateMessageView(this.battleText.YouLose);
+    }
     private void UpdateMessageView(string message, int points = 0, bool wait = false){
         message = Join(message);
         message = AddWaitText(message, wait);
@@ -136,7 +159,7 @@ public class BattleController : MonoBehaviour {
         SetEnemyAction();
 
         // プレイヤーと敵の双方の行動を実行
-        StartCoroutine("ExecuteAction");
+        StartCoroutine(ExecuteAction());
 
     }
 
@@ -159,9 +182,6 @@ public class BattleController : MonoBehaviour {
 
         // 敵側の行動処理に入る前にウェイトを入れる
         yield return Wait(1.0f);
-
-        // 敵側の状態確認
-        yield return CheckEnemyStatus();
         
         // 敵が死亡しているならこれ以降の処理は行わない
         if (this.enemy.IsDead()) {
@@ -173,12 +193,13 @@ public class BattleController : MonoBehaviour {
         // 状態異常等の「死んでないが行動できない」状態を実装するなら行動可能かどうかを取得する関数を用意したい。
         yield return ExecuteEnemyAction();
 
-        yield return CheckPlayerStatus();
         // プレイヤーが死亡しているならボタンの有効化を行わない
         if (this.player.IsDead()) {
             yield break;
         }
 
+        yield return Wait(1.0f);
+        
         // 全ての処理が終わったらボタン入力を受け付けるようにする
         EnableButtonAction();
     }
@@ -201,7 +222,7 @@ public class BattleController : MonoBehaviour {
     private IEnumerator PlayerAttack() {
         UpdateMessageView(this.battleText.OnPlayerAttack, wait: true);
         yield return Wait(1.0f);
-        this.enemy.Damage<Player>(ref this.player);
+        this.player.DealDamageTo<Enemy>(ref this.enemy);
     }
 
     private IEnumerator PlayerHeal() {
@@ -211,15 +232,6 @@ public class BattleController : MonoBehaviour {
         // 実際の回復量は計算する
         this.player.Heal();
 
-    }
-
-    private IEnumerator CheckEnemyStatus() {
-        if (this.enemy.IsDead()) {
-            enemyView.OnDefeat();
-            UpdateMessageView(this.battleText.OnEnemyDefeat, wait: true);
-            yield return Wait(1.0f);
-            UpdateMessageView(this.battleText.YouWin);
-        }
     }
 
     private IEnumerator ExecuteEnemyAction() {
@@ -242,7 +254,7 @@ public class BattleController : MonoBehaviour {
     private IEnumerator EnemyAttack() {
         UpdateMessageView(this.battleText.OnEnemyAttack, wait: true);
         yield return Wait(1.0f);
-        this.player.Damage<Enemy>(ref this.enemy);
+        this.enemy.DealDamageTo<Player>(ref this.player);
     }
 
     private IEnumerator EnemyHeal() {
@@ -256,15 +268,6 @@ public class BattleController : MonoBehaviour {
     private IEnumerator EnemyWait() {
         UpdateMessageView(this.battleText.EnemyWaiting);
         yield return null;
-    }
-
-    private IEnumerator CheckPlayerStatus() {
-        if (this.player.IsDead()) {
-            yield return Wait(1.0f);
-            UpdateMessageView(this.battleText.OnPlayerDefeat);
-            yield return Wait(1.0f);
-            UpdateMessageView(this.battleText.YouLose);
-        }
     }
     private IEnumerator Wait(float seconds) {
         yield return new WaitForSeconds(seconds);

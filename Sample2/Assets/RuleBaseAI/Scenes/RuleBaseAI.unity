@@ -432,7 +432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorName: "\u5996\u602A"
   hp: 10
-  atk: 6
+  atk: 5
   dfc: 3
   characterSprite: {fileID: 21300000, guid: 54b0ef283327a4ecb8bab37e3329f714, type: 3}
   routine:
@@ -446,10 +446,10 @@ MonoBehaviour:
     playerHP_ConditionValue: 0
     playerHP_ConditionRange: 0
     actionOnce: 0
-    action: 2
+    action: 1
   - useTurnValue: 1
-    turnValue: 2
-    constOrMulti: 0
+    turnValue: 3
+    constOrMulti: 1
     enemyHPTrigger: 0
     enemyHP_ConditionValue: 0
     enemyHP_ConditionRange: 0
@@ -457,7 +457,7 @@ MonoBehaviour:
     playerHP_ConditionValue: 0
     playerHP_ConditionRange: 0
     actionOnce: 0
-    action: 1
+    action: 2
   index: 0
 --- !u!114 &390941590
 MonoBehaviour:
