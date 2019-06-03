@@ -5,10 +5,6 @@ public class ConditionChecker {
 
     ArrayList usedActionList = new ArrayList();
 
-    public string ReturnOK() {
-        return "OK!";
-    }
-
     // HACK : インデント整理
     public AIRoutine DetermineEnemyAction (
         AIRoutine[] routineList, int turnCount,
