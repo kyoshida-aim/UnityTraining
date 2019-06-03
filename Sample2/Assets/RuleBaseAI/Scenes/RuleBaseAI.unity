@@ -373,46 +373,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &318424457
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 318424459}
-  - component: {fileID: 318424458}
-  m_Layer: 0
-  m_Name: Test
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &318424458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 318424457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2be0c5b2c5b1446e9a630f35dd2a05bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &318424459
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 318424457}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &390941586
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +400,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 390941586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c016549ab0ce345299c860d915226468, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cbbb00cb600240c290aa70916de8c40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   buttonView: {fileID: 1326785173}
@@ -457,7 +417,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &390941589
 MonoBehaviour:
@@ -467,19 +427,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 390941586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fa085ce52c264620be4ae99afdcce6d, type: 3}
+  m_Script: {fileID: 11500000, guid: 264ec585fe751400d937ad30efb7b037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ActorName: "\u5996\u602A"
+  actorName: "\u5996\u602A"
   hp: 10
   atk: 5
   dfc: 3
-  CurrentHP: 0
   characterSprite: {fileID: 21300000, guid: 54b0ef283327a4ecb8bab37e3329f714, type: 3}
   routine:
   - useTurnValue: 1
     turnValue: 1
-    ConstOrMulti: 0
+    constOrMulti: 0
+    enemyHPTrigger: 0
+    enemyHP_ConditionValue: 0
+    enemyHP_ConditionRange: 1
+    playerHPTrigger: 0
+    playerHP_ConditionValue: 0
+    playerHP_ConditionRange: 0
+    actionOnce: 0
+    action: 1
+  - useTurnValue: 1
+    turnValue: 3
+    constOrMulti: 1
     enemyHPTrigger: 0
     enemyHP_ConditionValue: 0
     enemyHP_ConditionRange: 0
@@ -487,31 +457,8 @@ MonoBehaviour:
     playerHP_ConditionValue: 0
     playerHP_ConditionRange: 0
     actionOnce: 0
-    actionID: 2
-  - useTurnValue: 0
-    turnValue: 0
-    ConstOrMulti: 0
-    enemyHPTrigger: 1
-    enemyHP_ConditionValue: 70
-    enemyHP_ConditionRange: 1
-    playerHPTrigger: 0
-    playerHP_ConditionValue: 0
-    playerHP_ConditionRange: 0
-    actionOnce: 1
-    actionID: 1
-  - useTurnValue: 0
-    turnValue: 0
-    ConstOrMulti: 0
-    enemyHPTrigger: 0
-    enemyHP_ConditionValue: 70
-    enemyHP_ConditionRange: 1
-    playerHPTrigger: 0
-    playerHP_ConditionValue: 0
-    playerHP_ConditionRange: 0
-    actionOnce: 0
-    actionID: 0
-  routineIndex: 0
-  needRefresh: 0
+    action: 2
+  index: 0
 --- !u!114 &390941590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -520,14 +467,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 390941586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf7b548554e664a3ebe077aa9a3a4314, type: 3}
+  m_Script: {fileID: 11500000, guid: ba4771c5bcf514740b69830ba3a9323a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ActorName: "\u3042\u306A\u305F"
+  actorName: "\u3042\u306A\u305F"
   hp: 10
   atk: 6
   dfc: 3
-  CurrentHP: 0
 --- !u!114 &390941591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -536,7 +482,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 390941586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32dc789a2fcf7476ea41d2284f7c511f, type: 3}
+  m_Script: {fileID: 11500000, guid: 38ca345ab08324ecc8d919547f31ec08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   battleStart: "<EnemyName> \u304C \u3042\u3089\u308F\u308C\u305F\uFF01"
@@ -1083,12 +1029,52 @@ MonoBehaviour:
   m_GameObject: {fileID: 1326785171}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 153602f05da414df6a1b6450bad71a31, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f527e40f09b3488b96cf122df53cd78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   attackButton: {fileID: 999928467}
   healButton: {fileID: 1316372342}
   resetButton: {fileID: 206927149}
+--- !u!1 &1676367233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1676367235}
+  - component: {fileID: 1676367234}
+  m_Layer: 0
+  m_Name: Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1676367234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1676367233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be0c5b2c5b1446e9a630f35dd2a05bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1676367235
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1676367233}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.9024057, y: 2.09908, z: 0.073681206}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1709800356
 GameObject:
   m_ObjectHideFlags: 0
@@ -1269,7 +1255,7 @@ Transform:
   - {fileID: 1868381428}
   - {fileID: 1210060319}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1789378405
 GameObject:
@@ -1355,12 +1341,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1789378405}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b56d4016092e4cc2a89427a5a72c10c, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ff65d33d677d435a9fd1d7c9b8f7c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerName: 
-  EnemyName: 
-  EffectQuantity: 0
+  battleLog: {fileID: 1789378407}
 --- !u!1 &1868381426
 GameObject:
   m_ObjectHideFlags: 0
@@ -1445,6 +1429,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1868381426}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa96b46f7e0e74e6f827ce286a6b8593, type: 3}
+  m_Script: {fileID: 11500000, guid: f42ea3f3d060b465aa1de43e5d4798e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

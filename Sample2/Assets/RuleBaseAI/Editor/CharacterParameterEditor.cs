@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Actor))]
+[CustomEditor(typeof(ActorParams))]
 [CanEditMultipleObjects]
 public class ActorEditor : Editor {
     
@@ -13,10 +13,10 @@ public class ActorEditor : Editor {
     protected SerializedProperty dfc;
 
     public virtual void OnEnable () {
-        actorName = serializedObject.FindProperty("ActorName");
-        hp = serializedObject.FindProperty("Hp");
-        atk = serializedObject.FindProperty("Atk");
-        dfc = serializedObject.FindProperty("Dfc");
+        actorName = serializedObject.FindProperty("actorName");
+        hp = serializedObject.FindProperty("hp");
+        atk = serializedObject.FindProperty("atk");
+        dfc = serializedObject.FindProperty("dfc");
     }
 
 	// 初期設定

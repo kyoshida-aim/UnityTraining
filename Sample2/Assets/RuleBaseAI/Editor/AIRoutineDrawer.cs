@@ -3,8 +3,16 @@ using UnityEditor;
 
 [CustomPropertyDrawer (typeof(AIRoutine))]
 public class AIRoutineDrawer : PropertyDrawer {
-
-	string[] ActionList = {"ATTACK", "HEAL" , "WAIT"};
+    
+    // TODO :
+    // ActionList.cs内で定義したものと全く同じものを使用している。
+    // Editorフォルダは定義域が違うためかScripts内のActionList.csを読み込めないため。
+    public enum ActionList
+    {
+    Attack,
+    Heal,
+    Wait,
+    }
 	string[] Multiple = {"の時", "の倍数の時" };
 	string[] HigherorLower = {"以上", "以下" };
 	string percentageText = "%";
@@ -89,7 +97,7 @@ public class AIRoutineDrawer : PropertyDrawer {
 			var playerHP_ConditionValue = property.FindPropertyRelative ("playerHP_ConditionValue");
 			var playerHP_ConditionRange = property.FindPropertyRelative ("playerHP_ConditionRange");
 			var actionOnce = property.FindPropertyRelative ("actionOnce");
-			var actionID = property.FindPropertyRelative("actionID");
+			var action = property.FindPropertyRelative("action");
 
 			//各プロパティーの GUI を描画
 
@@ -99,7 +107,7 @@ public class AIRoutineDrawer : PropertyDrawer {
 				turnValue.intValue = Mathf.Max(
 				EditorGUI.IntField(turnValueRect,
 					"ターン数が",
-					turnValue.intValue), 0);
+					turnValue.intValue), 1);
 
 				ConstOrMulti.intValue = 
 					EditorGUI.Popup(ConstOrMultiRect,
@@ -153,7 +161,7 @@ public class AIRoutineDrawer : PropertyDrawer {
 			EditorGUI.PropertyField(actionOnceRect, actionOnce);
 
 			// 行動内容
-			actionID.intValue = EditorGUI.Popup(actionRect, "Action", actionID.intValue, ActionList);
+			action.enumValueIndex = (int)(ActionList)EditorGUI.Popup(actionRect, "Action", action.enumValueIndex, action.enumNames);
 		}
 	}
 }
