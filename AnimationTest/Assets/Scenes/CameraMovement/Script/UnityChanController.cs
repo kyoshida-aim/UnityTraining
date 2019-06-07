@@ -4,6 +4,7 @@ using System.Collections;
 public class UnityChanController : MonoBehaviour {
 
     [SerializeField] private Animator animator;
+    [SerializeField] private Rigidbody rigidbody;
 
     // Update is called once per frame
     void Update () {
