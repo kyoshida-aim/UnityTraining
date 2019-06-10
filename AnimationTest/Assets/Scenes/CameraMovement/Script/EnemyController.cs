@@ -1,111 +1,160 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[System.Serializable]
+public class PatrolData {
+    [SerializeField] private List<Vector3> patrolPoint = new List<Vector3>();
+    [SerializeField] private float span = 3.0f;
+    [SerializeField] private float lostTimeSpan = 6.0f;
+
+    public List<Vector3> PatrolPoint {
+        get { return patrolPoint; }
+    }
+
+    public float Span {
+        get { return span; }
+    }
+
+    public float LostTimeSpan {
+        get { return lostTimeSpan; }
+    }
+
+    void OnValidate() {
+        span = Mathf.Max(span, 0);
+        lostTimeSpan = Mathf.Max(lostTimeSpan, 0);
+    }
+
+
+}
+
 public class EnemyController : MonoBehaviour {
 
 
-    public NavMeshAgent agent;
-    public GameObject target;
+    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private GameObject target;
+    [SerializeField] private Rigidbody rigidBody;
+    [SerializeField] private PatrolData patrolData;
 
-    string state = "patrol";
-    float span = 3.0f;
-    float delta = 0;
-    float lostTimeSpan = 6.0f;
-    Vector3 patrolPoint = new Vector3();
-    Vector3 patrolRotation = new Vector3();
-    Rigidbody enemyBody;
-    bool seekRight;
-    bool seekLeft;
+    private string state = "patrol";
+    private bool seekRight = false;
+    private bool seekLeft = false;
 
-    void Start () {
-        // 定点パトロールは問題があるので指定した位置に移動するだけにする
-        patrolPoint = new Vector3(-6f, -3.9f, 11f);
-        patrolRotation = new Vector3(0, 180, 0);
-        this.enemyBody = GetComponent<Rigidbody>();
-    }
+    private int patrolIndex = 0;
+    private float delta = 0;
 
-    // Update is called once per frame
     void Update () {
-        if (this.state == "patrol") {
-            this.delta += Time.deltaTime;
-            if (this.delta > this.span) {
-                this.delta = 0;
-                this.GoToNextPosition();
-            }
-        } else if (this.state == "returning") {
-            this.UpdateReturningToPatrolPoint();
-        } else if (this.state == "chase") {
-            this.agent.SetDestination(target.transform.position);
-        } else if (this.state == "lost") {
-            this.delta += Time.deltaTime;
-            if (this.delta > this.lostTimeSpan) {
-                this.ChangeState("returning");
-                this.GoToNextPosition();
-            } else if (this.delta > this.lostTimeSpan / 3 * 2) {
-                if (!this.seekLeft) {
-                    this.seekLeft = true;
-                    this.enemyBody.velocity = Vector3.zero;
-                    this.enemyBody.angularVelocity = Vector3.up * -1;
-                }
-            } else if (this.delta > this.lostTimeSpan / 3 * 1) {
-                if (!this.seekRight) {
-                    this.seekRight = true;
-                    this.enemyBody.velocity = Vector3.zero;
-                    this.enemyBody.angularVelocity = Vector3.up;
-                }
-            }
+        if (state == "patrol") {
+            UpdatePatrol();
+        } else if (state == "returning") {
+            UpdateReturningToPatrolPoint();
+        } else if (state == "chase") {
+            UpdateChase();
+        } else if (state == "lost") {
+            UpdateLost();
         }
     }
-    void ChangeState(string changeTo) {
-        if (changeTo == "lost") {
-            this.delta = 0;
-            this.seekLeft = false;
-            this.seekRight = false;
-            this.state = "lost";
-        } else {
-            this.delta = 0;
-            this.state = changeTo;
+
+    void UpdatePatrol() {
+        delta += Time.deltaTime;
+        if (delta > patrolData.Span) {
+            delta = 0;
+            GoToNextPosition();
         }
-    }
-    void GoToNextPosition() {
-        this.enemyBody.velocity = Vector3.zero;
-        this.enemyBody.angularVelocity = Vector3.zero;
-        this.agent.SetDestination(patrolPoint);
     }
 
     void UpdateReturningToPatrolPoint() {
-        Vector3 returnPoint =  patrolPoint + new Vector3(0, 0, 5);
+        // Note:ゲームに合わせて設定を変更すべし
+        Vector3 returnPoint =  patrolData.PatrolPoint[patrolIndex] + new Vector3(0, 0, 5);
         float dist = Vector3.Distance(transform.position, returnPoint);
         if (dist < 1.0f) {
             ChangeState("patrol");
-            this.agent.SetDestination(patrolPoint);
+            SetAgentDestination(patrolData.PatrolPoint[patrolIndex]);
         } else {
-            this.agent.SetDestination(returnPoint);
+            SetAgentDestination(returnPoint);
         }
     }
 
+    void UpdateChase() {
+        SetAgentDestination(target.transform.position);
+    }
+
+    void UpdateLost() {
+        delta += Time.deltaTime;
+        if (delta > patrolData.LostTimeSpan) {
+            ChangeState("returning");
+            GoToNextPosition();
+        } else if (delta > patrolData.LostTimeSpan / 3 * 2) {
+            SeekLeft();
+        } else if (delta > patrolData.LostTimeSpan / 3 * 1) {
+            SeekRight();
+        }
+    }
+
+    void SetAgentDestination(Vector3 destination) {
+        agent.SetDestination(destination);
+    }
+
+    void SeekLeft() {
+        if (!seekLeft) {
+            seekLeft = true;
+            ChangeAngularVelocity(Vector3.up * -1);
+        }
+    }
+
+    void SeekRight() {
+        if (!seekRight) {
+            seekRight = true;
+            ChangeAngularVelocity(Vector3.up);
+        }
+    }
+
+    void ChangeAngularVelocity(Vector3 newVector) {
+        rigidBody.velocity = Vector3.zero;
+        rigidBody.angularVelocity = newVector;
+    }
+    void ChangeState(string changeTo) {
+        if (changeTo == "lost") {
+            delta = 0;
+            seekLeft = false;
+            seekRight = false;
+            state = "lost";
+        } else {
+            delta = 0;
+            state = changeTo;
+        }
+    }
+    void GoToNextPosition() {
+        ChangeAngularVelocity(Vector3.zero);
+        SetAgentDestination(GetNextPatrolPoint());
+    }
+
+    Vector3 GetNextPatrolPoint() {
+        patrolIndex = (patrolIndex + 1) % patrolData.PatrolPoint.Count;
+        return patrolData.PatrolPoint[patrolIndex];
+    }
     void OnTriggerStay(Collider col) {
         //　プレイヤーキャラクターを発見
         if(col.tag == target.tag ) {
             RaycastHit hit;
             if (Physics.Linecast(transform.position, 
-            col.gameObject.transform.position, out hit) && 
-            hit.transform.gameObject == this.target) {
-                this.ChangeState("chase");
-            } else if (this.state == "chase") {
-                this.delta += Time.deltaTime;
-                if (this.delta > this.lostTimeSpan) {
-                    this.ChangeState("lost");
+            target.transform.position, out hit) && 
+            hit.transform.gameObject == target) {
+                ChangeState("chase");
+            } else if (state == "chase") {
+                delta += Time.deltaTime;
+                if (delta > patrolData.LostTimeSpan) {
+                    ChangeState("lost");
                 }
             }
         }
     }
     
     void OnTriggerExit(Collider col) {
-        if(col.tag == "Player" && this.state == "chase") {
-            this.ChangeState("lost");
+        if(col.tag == target.tag && state == "chase") {
+            ChangeState("lost");
         }
     }
 }
