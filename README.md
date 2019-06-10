@@ -17,3 +17,7 @@ Unityの保存用
     一部アセットをお借りしています。
 
 [SoundTest](SoundTest) :AudioSource等を弄る練習
+
+[AnimationTest](AnimationTest) :Animation等を弄る練習
+  - CameraMovement :Cinemachineを使ったカメラワークの練習
+  - TimelineSample :Timelineの練習
