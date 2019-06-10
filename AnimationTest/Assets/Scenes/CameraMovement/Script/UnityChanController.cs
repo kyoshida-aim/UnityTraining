@@ -15,10 +15,10 @@ public class UnityChanController : MonoBehaviour {
             animator.SetBool("isRunning", false);
         }
         if (InputRight()) {
-            transform.Rotate(0, 5, 0);
+            Rotate(invert: false);
         }
         if (InputLeft()) {
-            transform.Rotate(0, -5, 0);
+            Rotate(invert: true);
         }
     }
 
@@ -34,4 +34,15 @@ public class UnityChanController : MonoBehaviour {
         return (Input.GetKey("left") || Input.GetKey("a"));
     }
 
+    private void Rotate(bool invert) {
+        Vector3 rotation = Rotation();
+        if (invert) {
+            rotation *= -1;
+        }
+        transform.Rotate(rotation);
+    }
+
+    private Vector3 Rotation() {
+        return Vector3.up * 5;
+    }
 }
