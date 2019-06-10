@@ -14,6 +14,9 @@ public class PatrolData {
         get { return patrolPoint; }
     }
 
+    public int ListSize {
+        get { return PatrolPoint.Count; }
+    }
     public float Span {
         get { return span; }
     }
@@ -37,7 +40,6 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] private GameObject target;
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private PatrolData patrolData;
-
     private string state = "patrol";
     private bool seekRight = false;
     private bool seekLeft = false;
@@ -67,11 +69,11 @@ public class EnemyController : MonoBehaviour {
 
     void UpdateReturningToPatrolPoint() {
         // Note:ゲームに合わせて設定を変更すべし
-        Vector3 returnPoint =  patrolData.PatrolPoint[patrolIndex] + new Vector3(0, 0, 5);
+        Vector3 returnPoint =  GetPatrolPoint(patrolIndex) + new Vector3(0, 0, 5);
         float dist = Vector3.Distance(transform.position, returnPoint);
         if (dist < 1.0f) {
             ChangeState("patrol");
-            SetAgentDestination(patrolData.PatrolPoint[patrolIndex]);
+            SetAgentDestination(GetPatrolPoint(patrolIndex));
         } else {
             SetAgentDestination(returnPoint);
         }
@@ -115,7 +117,7 @@ public class EnemyController : MonoBehaviour {
         rigidBody.velocity = Vector3.zero;
         rigidBody.angularVelocity = newVector;
     }
-    
+
     void ChangeState(string changeTo) {
         if (changeTo == "lost") {
             delta = 0;
@@ -128,12 +130,16 @@ public class EnemyController : MonoBehaviour {
         }
     }
     void GoToNextPosition() {
+        if (patrolData.ListSize == 0) { return ; }
         ChangeAngularVelocity(Vector3.zero);
-        SetAgentDestination(GetNextPatrolPoint());
+        patrolIndex = GetNextPatrolIndex();
+        SetAgentDestination(GetPatrolPoint(patrolIndex));
     }
 
-    Vector3 GetNextPatrolPoint() {
-        patrolIndex = (patrolIndex + 1) % patrolData.PatrolPoint.Count;
+    int GetNextPatrolIndex() {
+        return (patrolIndex + 1) % patrolData.ListSize;
+    }
+    Vector3 GetPatrolPoint(int patrolIndex) {
         return patrolData.PatrolPoint[patrolIndex];
     }
 
@@ -142,7 +148,7 @@ public class EnemyController : MonoBehaviour {
         if(col.tag == target.tag ) {
             RaycastHit hit;
             if (Physics.Linecast(transform.position, 
-            target.transform.position, out hit) && 
+            col.gameObject.transform.position, out hit) && 
             hit.transform.gameObject == target) {
                 ChangeState("chase");
             } else if (state == "chase") {
