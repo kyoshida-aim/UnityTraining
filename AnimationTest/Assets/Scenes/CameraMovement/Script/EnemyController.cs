@@ -115,6 +115,7 @@ public class EnemyController : MonoBehaviour {
         rigidBody.velocity = Vector3.zero;
         rigidBody.angularVelocity = newVector;
     }
+    
     void ChangeState(string changeTo) {
         if (changeTo == "lost") {
             delta = 0;
@@ -135,6 +136,7 @@ public class EnemyController : MonoBehaviour {
         patrolIndex = (patrolIndex + 1) % patrolData.PatrolPoint.Count;
         return patrolData.PatrolPoint[patrolIndex];
     }
+
     void OnTriggerStay(Collider col) {
         //　プレイヤーキャラクターを発見
         if(col.tag == target.tag ) {
