@@ -8,17 +8,30 @@ public class UnityChanController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (Input.GetKey("up")) {
+        if (InputUp()) {
             animator.SetBool("isRunning", true);
             transform.position += transform.forward * 0.1f;
         } else {
             animator.SetBool("isRunning", false);
         }
-        if (Input.GetKey("right")) {
+        if (InputRight()) {
             transform.Rotate(0, 5, 0);
         }
-        if (Input.GetKey ("left")) {
+        if (InputLeft()) {
             transform.Rotate(0, -5, 0);
         }
     }
+
+    private bool InputUp() {
+        return (Input.GetKey("up") || Input.GetKey("w"));
+    }
+
+    private bool InputRight() {
+        return (Input.GetKey("right") || Input.GetKey("d"));
+    }
+
+    private bool InputLeft() {
+        return (Input.GetKey("left") || Input.GetKey("a"));
+    }
+
 }
